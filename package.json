@@ -1,0 +1,91 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "react-chakra-date-picker",
+  "author": "Chris Bull",
+  "module": "dist/react-chakra-date-picker.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/react-chakra-date-picker.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/react-chakra-date-picker.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.13.1",
+    "@chakra-ui/icons": "^1.0.5",
+    "@chakra-ui/react": "^1.3.3",
+    "@chakra-ui/theme-tools": "^1.0.4",
+    "@datepicker-react/hooks": "^2.8.0",
+    "@emotion/react": "^11.1.5",
+    "@emotion/styled": "^11.1.5",
+    "@size-limit/preset-small-lib": "^4.9.2",
+    "@storybook/addon-essentials": "^6.1.20",
+    "@storybook/addon-info": "^5.3.21",
+    "@storybook/addon-knobs": "^6.1.20",
+    "@storybook/addon-links": "^6.1.20",
+    "@storybook/addons": "^6.1.20",
+    "@storybook/react": "^6.1.20",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/react-hooks": "^5.0.3",
+    "@types/babel__core": "^7.1.12",
+    "@types/jest": "^26.0.20",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
+    "@types/react-is": "^17.0.0",
+    "@types/storybook__addon-info": "^5.2.3",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "babel-loader": "^8.2.2",
+    "framer-motion": "^3.7.0",
+    "husky": "^5.0.9",
+    "jest-date-mock": "^1.0.8",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-is": "^17.0.1",
+    "size-limit": "^4.9.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.2"
+  },
+  "dependencies": {
+    "ts-deepmerge": "^1.0.6"
+  }
+}

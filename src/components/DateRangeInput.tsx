@@ -1,5 +1,5 @@
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Box, Flex, Grid } from '@chakra-ui/react';
+import { ArrowForwardIcon } from '@chakra-ui/icons'
+import { Box, Flex, Grid } from '@chakra-ui/react'
 import {
   END_DATE,
   FocusedInput,
@@ -7,36 +7,36 @@ import {
   getInputValue,
   START_DATE,
   UseDatepickerProps,
-} from '@datepicker-react/hooks';
-import React, { useEffect, useRef, useState } from 'react';
-import { ThemeProvider } from '../context/ThemeContext';
-import { Theme } from '../defaultTheme';
-import { DateRangeInputPhrases, dateRangeInputPhrases } from '../phrases';
-import { Datepicker } from './Datepicker';
-import { Input } from './Input';
+} from '@datepicker-react/hooks'
+import React, { useEffect, useRef, useState } from 'react'
+import { ThemeProvider } from '../context/ThemeContext'
+import { Theme } from '../defaultTheme'
+import { DateRangeInputPhrases, dateRangeInputPhrases } from '../phrases'
+import { Datepicker } from './Datepicker'
+import { Input } from './Input'
 
 export interface DateRangeInputProps extends UseDatepickerProps {
-  displayFormat?: string | FormatFunction;
-  phrases?: DateRangeInputPhrases;
-  onFocusChange(focusInput: FocusedInput): void;
-  showStartDateCalendarIcon?: boolean;
-  showEndDateCalendarIcon?: boolean;
-  onClose?(): void;
-  vertical?: boolean;
-  showResetDates?: boolean;
-  showSelectedDates?: boolean;
-  showClose?: boolean;
-  rtl?: boolean;
-  placement?: 'top' | 'bottom';
-  dayLabelFormat?(date: Date): string;
-  weekdayLabelFormat?(date: Date): string;
-  monthLabelFormat?(date: Date): string;
-  onDayRender?(date: Date): React.ReactNode;
-  startDateInputId?: string;
-  endDateInputId?: string;
-  unavailableDates?: Date[];
-  initialVisibleMonth?: Date;
-  theme?: Partial<Theme>;
+  displayFormat?: string | FormatFunction
+  phrases?: DateRangeInputPhrases
+  onFocusChange(focusInput: FocusedInput): void
+  showStartDateCalendarIcon?: boolean
+  showEndDateCalendarIcon?: boolean
+  onClose?(): void
+  vertical?: boolean
+  showResetDates?: boolean
+  showSelectedDates?: boolean
+  showClose?: boolean
+  rtl?: boolean
+  placement?: 'top' | 'bottom'
+  dayLabelFormat?(date: Date): string
+  weekdayLabelFormat?(date: Date): string
+  monthLabelFormat?(date: Date): string
+  onDayRender?(date: Date): React.ReactNode
+  startDateInputId?: string
+  endDateInputId?: string
+  unavailableDates?: Date[]
+  initialVisibleMonth?: Date
+  theme?: Partial<Theme>
 }
 
 export function DateRangeInput({
@@ -72,18 +72,18 @@ export function DateRangeInput({
   unavailableDates = [],
   theme,
 }: DateRangeInputProps) {
-  const ref = useRef(null);
-  const datepickerWrapperRef = useRef<HTMLDivElement>(null);
+  const ref = useRef(null)
+  const datepickerWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      window.addEventListener('click', onClickOutsideHandler);
+      window.addEventListener('click', onClickOutsideHandler)
     }
 
     return () => {
-      window.removeEventListener('click', onClickOutsideHandler);
-    };
-  });
+      window.removeEventListener('click', onClickOutsideHandler)
+    }
+  })
 
   function onClickOutsideHandler(event: Event) {
     if (
@@ -93,20 +93,20 @@ export function DateRangeInput({
       // @ts-ignore
       !datepickerWrapperRef.current.contains(event.target)
     ) {
-      onFocusChange(null);
+      onFocusChange(null)
     }
   }
 
   function handleDatepickerClose() {
-    onClose();
-    onFocusChange(null);
+    onClose()
+    onFocusChange(null)
   }
 
   function handleInputChange(date: Date) {
     // @ts-ignore
     if (ref && ref.current && ref.current.onDateSelect) {
       // @ts-ignore
-      ref.current.onDateSelect(date);
+      ref.current.onDateSelect(date)
     }
   }
 
@@ -180,19 +180,17 @@ export function DateRangeInput({
         </Box>
       </Box>
     </ThemeProvider>
-  );
+  )
 }
 
 export interface DateRangeInputDemoProps {
-  vertical?: boolean;
+  vertical?: boolean
 }
 
-export const DateRangeInputDemo: React.FC<DateRangeInputDemoProps> = ({
-  vertical = false,
-}) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [focusedInput, setFocusedInput] = useState<FocusedInput>(null);
+export const DateRangeInputDemo: React.FC<DateRangeInputDemoProps> = ({ vertical = false }) => {
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
+  const [focusedInput, setFocusedInput] = useState<FocusedInput>(null)
 
   return (
     <DateRangeInput
@@ -200,14 +198,14 @@ export const DateRangeInputDemo: React.FC<DateRangeInputDemoProps> = ({
       startDate={startDate}
       endDate={endDate}
       focusedInput={focusedInput}
-      onDatesChange={data => {
-        setStartDate(data.startDate);
-        setEndDate(data.endDate);
-        setFocusedInput(data.focusedInput);
+      onDatesChange={(data) => {
+        setStartDate(data.startDate)
+        setEndDate(data.endDate)
+        setFocusedInput(data.focusedInput)
       }}
-      onFocusChange={focused => {
-        setFocusedInput(focused);
+      onFocusChange={(focused) => {
+        setFocusedInput(focused)
       }}
     />
-  );
-};
+  )
+}

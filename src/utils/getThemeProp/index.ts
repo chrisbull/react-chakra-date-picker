@@ -1,1 +1,1 @@
-export * from './getThemeProp';
+export * from './getThemeProp'

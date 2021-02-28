@@ -1,16 +1,16 @@
-import { Button } from '@chakra-ui/react';
-import React from 'react';
-import { RepeatIcon } from '@chakra-ui/icons';
+import { Button } from '@chakra-ui/react'
+import React from 'react'
+import { RepeatIcon } from '@chakra-ui/icons'
 
 interface ResetDatesProps {
-  onResetDates(): void;
-  text: string;
+  onResetDates(): void
+  text: string
 }
 
 export function ResetDates({ onResetDates, text }: ResetDatesProps) {
   function handleMouseUp(e: React.MouseEvent) {
     // @ts-ignore
-    e.currentTarget.blur();
+    e.currentTarget.blur()
   }
 
   return (
@@ -23,5 +23,5 @@ export function ResetDates({ onResetDates, text }: ResetDatesProps) {
     >
       {text}
     </Button>
-  );
+  )
 }

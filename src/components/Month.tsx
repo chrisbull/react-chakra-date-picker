@@ -1,15 +1,15 @@
-import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react';
-import { CalendarDay, FirstDayOfWeek, useMonth } from '@datepicker-react/hooks';
-import React from 'react';
-import Day from './Day';
+import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
+import { CalendarDay, FirstDayOfWeek, useMonth } from '@datepicker-react/hooks'
+import React from 'react'
+import Day from './Day'
 
 export interface MonthProps {
-  year: number;
-  month: number;
-  firstDayOfWeek: FirstDayOfWeek;
-  dayLabelFormat(date: Date): string;
-  weekdayLabelFormat(date: Date): string;
-  monthLabelFormat(date: Date): string;
+  year: number
+  month: number
+  firstDayOfWeek: FirstDayOfWeek
+  dayLabelFormat(date: Date): string
+  weekdayLabelFormat(date: Date): string
+  monthLabelFormat(date: Date): string
 }
 
 export const Month = ({
@@ -27,7 +27,7 @@ export const Month = ({
     year,
     month,
     firstDayOfWeek,
-  });
+  })
 
   return (
     <Box>
@@ -44,13 +44,11 @@ export const Month = ({
       <SimpleGrid columns={7}>
         {days.map((day: CalendarDay, index: number) => {
           if (typeof day === 'object') {
-            return (
-              <Day date={day.date} key={day.dayLabel} day={day.dayLabel} />
-            );
+            return <Day date={day.date} key={day.dayLabel} day={day.dayLabel} />
           }
-          return <div key={index} />;
+          return <div key={index} />
         })}
       </SimpleGrid>
     </Box>
-  );
-};
+  )
+}

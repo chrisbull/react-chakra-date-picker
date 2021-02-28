@@ -1,50 +1,50 @@
-import { Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react'
 import {
   FirstDayOfWeek,
   FormatFunction,
   getInputValue,
   OnDatesChangeProps,
   START_DATE,
-} from '@datepicker-react/hooks';
-import React, { useEffect, useRef, useState } from 'react';
-import { ThemeProvider } from '../context/ThemeContext';
-import { Theme } from '../defaultTheme';
-import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases';
-import { Datepicker } from './Datepicker';
-import { Input } from './Input';
+} from '@datepicker-react/hooks'
+import React, { useEffect, useRef, useState } from 'react'
+import { ThemeProvider } from '../context/ThemeContext'
+import { Theme } from '../defaultTheme'
+import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases'
+import { Datepicker } from './Datepicker'
+import { Input } from './Input'
 
 export interface OnDateChangeProps {
-  date: Date | null;
-  showDatepicker: boolean;
+  date: Date | null
+  showDatepicker: boolean
 }
 
 export interface DateSingleInputProps {
-  date: Date | null;
-  minBookingDate?: Date;
-  maxBookingDate?: Date;
-  showDatepicker: boolean;
-  numberOfMonths?: number;
-  firstDayOfWeek?: FirstDayOfWeek;
-  displayFormat?: string | FormatFunction;
-  phrases?: DateSingleInputPhrases;
-  showCalendarIcon?: boolean;
-  vertical?: boolean;
-  showResetDate?: boolean;
-  showClose?: boolean;
-  rtl?: boolean;
-  placement?: 'top' | 'bottom';
-  initialVisibleMonth?: Date;
-  onDateChange(data: OnDateChangeProps): void;
-  onFocusChange(focusInput: boolean): void;
-  isDateBlocked?(date: Date): boolean;
-  onClose?(): void;
-  dayLabelFormat?(date: Date): string;
-  weekdayLabelFormat?(date: Date): string;
-  monthLabelFormat?(date: Date): string;
-  onDayRender?(date: Date): React.ReactNode;
-  inputId?: string;
-  unavailableDates?: Date[];
-  theme?: Theme;
+  date: Date | null
+  minBookingDate?: Date
+  maxBookingDate?: Date
+  showDatepicker: boolean
+  numberOfMonths?: number
+  firstDayOfWeek?: FirstDayOfWeek
+  displayFormat?: string | FormatFunction
+  phrases?: DateSingleInputPhrases
+  showCalendarIcon?: boolean
+  vertical?: boolean
+  showResetDate?: boolean
+  showClose?: boolean
+  rtl?: boolean
+  placement?: 'top' | 'bottom'
+  initialVisibleMonth?: Date
+  onDateChange(data: OnDateChangeProps): void
+  onFocusChange(focusInput: boolean): void
+  isDateBlocked?(date: Date): boolean
+  onClose?(): void
+  dayLabelFormat?(date: Date): string
+  weekdayLabelFormat?(date: Date): string
+  monthLabelFormat?(date: Date): string
+  onDayRender?(date: Date): React.ReactNode
+  inputId?: string
+  unavailableDates?: Date[]
+  theme?: Theme
 }
 
 export function DateSingleInput({
@@ -74,18 +74,18 @@ export function DateSingleInput({
   unavailableDates = [],
   theme,
 }: DateSingleInputProps) {
-  const ref = useRef<unknown>(null);
-  const datepickerWrapperRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<unknown>(null)
+  const datepickerWrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      window.addEventListener('click', onClickOutsideHandler);
+      window.addEventListener('click', onClickOutsideHandler)
     }
 
     return () => {
-      window.removeEventListener('click', onClickOutsideHandler);
-    };
-  });
+      window.removeEventListener('click', onClickOutsideHandler)
+    }
+  })
 
   function onClickOutsideHandler(event: Event) {
     if (
@@ -95,27 +95,27 @@ export function DateSingleInput({
       // @ts-ignore
       !datepickerWrapperRef.current.contains(event.target)
     ) {
-      onFocusChange(false);
+      onFocusChange(false)
     }
   }
 
   function handleDatepickerClose() {
-    onClose();
-    onFocusChange(false);
+    onClose()
+    onFocusChange(false)
   }
 
   function onDatesChange({ focusedInput, startDate }: OnDatesChangeProps) {
     onDateChange({
       showDatepicker: focusedInput !== null,
       date: startDate,
-    });
+    })
   }
 
   function handleInputChange(date: Date) {
     // @ts-ignore
     if (ref && ref.current && ref.current.onDateSelect) {
       // @ts-ignore
-      ref.current.onDateSelect(date);
+      ref.current.onDateSelect(date)
     }
   }
 
@@ -168,25 +168,25 @@ export function DateSingleInput({
         </Box>
       </Box>
     </ThemeProvider>
-  );
+  )
 }
 
-export type DateSingleInputDemoProps = {};
+export type DateSingleInputDemoProps = {}
 export const DateSingleInputDemo = () => {
-  const [date, setDate] = useState<Date | null>(null);
-  const [showDatepicker, setShowDatepicker] = useState(false);
+  const [date, setDate] = useState<Date | null>(null)
+  const [showDatepicker, setShowDatepicker] = useState(false)
 
   return (
     <DateSingleInput
       date={date}
       showDatepicker={showDatepicker}
       onDateChange={(data: OnDateChangeProps) => {
-        setDate(data.date);
-        setShowDatepicker(data.showDatepicker);
+        setDate(data.date)
+        setShowDatepicker(data.showDatepicker)
       }}
       onFocusChange={(isFocused: boolean) => {
-        setShowDatepicker(isFocused);
+        setShowDatepicker(isFocused)
       }}
     />
-  );
-};
+  )
+}

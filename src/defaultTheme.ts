@@ -16,6 +16,6 @@ export const defaultTheme = {
   daySize: ['32px', '48px'],
   dayFontWeight: 'md',
   dayFontSize: [12, 16],
-};
+}
 
-export type Theme = typeof defaultTheme;
+export type Theme = typeof defaultTheme

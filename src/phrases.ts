@@ -37,8 +37,10 @@ export const datepickerPhrases = {
 
 export const dateRangeInputPhrases = {
   ...datepickerPhrases,
+
   startDateAriaLabel: 'Start date',
   endDateAriaLabel: 'End date',
+
   startDatePlaceholder: 'Start date',
   endDatePlaceholder: 'End date',
 }

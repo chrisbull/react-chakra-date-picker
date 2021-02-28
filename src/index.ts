@@ -6,11 +6,11 @@ import {
   MonthType,
   OnDatesChangeProps,
   START_DATE,
-} from '@datepicker-react/hooks';
-export * from './components/Datepicker';
-export * from './components/DateRangeInput';
-export * from './components/DateSingleInput';
-export * from './phrases';
+} from '@datepicker-react/hooks'
+export * from './components/Datepicker'
+export * from './components/DateRangeInput'
+export * from './components/DateSingleInput'
+export * from './phrases'
 export {
   END_DATE,
   FirstDayOfWeek,
@@ -19,4 +19,4 @@ export {
   MonthType,
   OnDatesChangeProps,
   START_DATE,
-};
+}

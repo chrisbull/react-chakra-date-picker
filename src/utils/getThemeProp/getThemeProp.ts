@@ -1,9 +1,9 @@
-import { Theme } from '../../defaultTheme';
+import { Theme } from '../../defaultTheme'
 
 export function getThemeProp(
   themeProp: keyof Theme['colors'],
   defaultValue: string,
-  theme?: Theme
+  theme?: Theme,
 ) {
   if (
     theme &&
@@ -12,8 +12,8 @@ export function getThemeProp(
     typeof theme.colors === 'object' &&
     theme.colors[themeProp]
   ) {
-    return theme.colors[themeProp];
+    return theme.colors[themeProp]
   }
 
-  return defaultValue;
+  return defaultValue
 }

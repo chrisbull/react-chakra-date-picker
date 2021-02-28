@@ -1,10 +1,10 @@
-import { BoxProps, Button, Flex, useTheme } from '@chakra-ui/react';
-import { useDay } from '@datepicker-react/hooks';
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
-import { DatepickerContext } from '../context/DatepickerContext';
-import { ThemeContext } from '../context/ThemeContext';
+import { BoxProps, Button, Flex, useTheme } from '@chakra-ui/react'
+import { useDay } from '@datepicker-react/hooks'
+import React, { useContext, useEffect, useMemo, useRef } from 'react'
+import { DatepickerContext } from '../context/DatepickerContext'
+import { ThemeContext } from '../context/ThemeContext'
 
-import { getColor } from '@chakra-ui/theme-tools';
+import { getColor } from '@chakra-ui/theme-tools'
 
 function getStateColor(
   {
@@ -12,9 +12,9 @@ function getStateColor(
     isSelectedStartOrEnd,
     isWithinHoverRange,
   }: {
-    isSelected: boolean;
-    isSelectedStartOrEnd: boolean;
-    isWithinHoverRange: boolean;
+    isSelected: boolean
+    isSelectedStartOrEnd: boolean
+    isWithinHoverRange: boolean
   },
   {
     selectedFirstOrLast,
@@ -22,30 +22,30 @@ function getStateColor(
     selected,
     rangeHover,
   }: {
-    selectedFirstOrLast: BoxProps['color'];
-    selected: BoxProps['color'];
-    normal: BoxProps['color'];
-    rangeHover: BoxProps['color'];
-  }
+    selectedFirstOrLast: BoxProps['color']
+    selected: BoxProps['color']
+    normal: BoxProps['color']
+    rangeHover: BoxProps['color']
+  },
 ) {
   if (isSelectedStartOrEnd) {
-    return selectedFirstOrLast;
+    return selectedFirstOrLast
   } else if (isSelected) {
-    return selected;
+    return selected
   } else if (isWithinHoverRange) {
-    return rangeHover;
+    return rangeHover
   } else {
-    return normal;
+    return normal
   }
 }
 
 interface DayProps {
-  day: string;
-  date: Date;
+  day: string
+  date: Date
 }
 
 function Day({ day, date }: DayProps) {
-  const dayRef = useRef<HTMLButtonElement>(null);
+  const dayRef = useRef<HTMLButtonElement>(null)
 
   const {
     focusedDate,
@@ -58,7 +58,7 @@ function Day({ day, date }: DayProps) {
     onDateFocus,
     onDateHover,
     onDayRender,
-  } = useContext(DatepickerContext);
+  } = useContext(DatepickerContext)
 
   const dayProps = useDay({
     date,
@@ -72,75 +72,45 @@ function Day({ day, date }: DayProps) {
     onDateSelect,
     onDateHover,
     dayRef,
-  });
+  })
 
-  const { onClick, onKeyDown, onMouseEnter, tabIndex } = dayProps;
+  const { onClick, onKeyDown, onMouseEnter, tabIndex } = dayProps
 
   useEffect(() => {
     if (dayProps.isSelected) {
-      console.log('isSelected', dayProps);
+      console.log('isSelected', dayProps)
     } else if (dayProps.isSelectedStartOrEnd) {
-      console.log('isSelectedStartOrEnd', dayProps);
+      console.log('isSelectedStartOrEnd', dayProps)
     } else if (dayProps.isWithinHoverRange) {
-      console.log('isWithinHoverRange', dayProps);
+      console.log('isWithinHoverRange', dayProps)
     }
 
-    return () => {};
-  }, [dayProps]);
+    return () => {}
+  }, [dayProps])
 
-  const themeContext = useContext(ThemeContext);
+  const themeContext = useContext(ThemeContext)
 
-  const chakraTheme = useTheme();
+  const chakraTheme = useTheme()
 
   const themeColors = {
-    dayAccessibilityBorderColor: getColor(
-      chakraTheme,
-      themeContext.colors.accessibility
-    ),
+    dayAccessibilityBorderColor: getColor(chakraTheme, themeContext.colors.accessibility),
     dayBackground: getColor(chakraTheme, themeContext.colors.white),
     dayBorderColor: getColor(chakraTheme, themeContext.colors.normalDayHover),
     dayColor: getColor(chakraTheme, themeContext.colors.mud),
-    dayHoverBackground: getColor(
-      chakraTheme,
-      themeContext.colors.normalDayHover
-    ),
+    dayHoverBackground: getColor(chakraTheme, themeContext.colors.normalDayHover),
     dayHoverColor: getColor(chakraTheme, themeContext.colors.mud),
-    dayHoverRangeBackground: getColor(
-      chakraTheme,
-      themeContext.colors.selectedDay
-    ),
-    dayHoverRangeBorderColor: getColor(
-      chakraTheme,
-      themeContext.colors.selectedDay
-    ),
+    dayHoverRangeBackground: getColor(chakraTheme, themeContext.colors.selectedDay),
+    dayHoverRangeBorderColor: getColor(chakraTheme, themeContext.colors.selectedDay),
     dayHoverRangeColor: getColor(chakraTheme, themeContext.colors.white),
-    daySelectedBackground: getColor(
-      chakraTheme,
-      themeContext.colors.selectedDay
-    ),
-    daySelectedBorderColor: getColor(
-      chakraTheme,
-      themeContext.colors.selectedDay
-    ),
+    daySelectedBackground: getColor(chakraTheme, themeContext.colors.selectedDay),
+    daySelectedBorderColor: getColor(chakraTheme, themeContext.colors.selectedDay),
     daySelectedColor: getColor(chakraTheme, themeContext.colors.white),
-    daySelectedFirstOrLastBackground: getColor(
-      chakraTheme,
-      themeContext.colors.primaryColor
-    ),
-    daySelectedFirstOrLastBorderColor: getColor(
-      chakraTheme,
-      themeContext.colors.primaryColor
-    ),
-    daySelectedFirstOrLastColor: getColor(
-      chakraTheme,
-      themeContext.colors.white
-    ),
-    daySelectedHoverBackground: getColor(
-      chakraTheme,
-      themeContext.colors.selectedDayHover
-    ),
+    daySelectedFirstOrLastBackground: getColor(chakraTheme, themeContext.colors.primaryColor),
+    daySelectedFirstOrLastBorderColor: getColor(chakraTheme, themeContext.colors.primaryColor),
+    daySelectedFirstOrLastColor: getColor(chakraTheme, themeContext.colors.white),
+    daySelectedHoverBackground: getColor(chakraTheme, themeContext.colors.selectedDayHover),
     daySelectedHoverColor: getColor(chakraTheme, themeContext.colors.white),
-  };
+  }
 
   const borderColor = useMemo(
     () =>
@@ -150,8 +120,8 @@ function Day({ day, date }: DayProps) {
         normal: themeColors.dayBorderColor,
         rangeHover: themeColors.dayHoverRangeColor,
       }),
-    [dayProps, themeContext]
-  );
+    [dayProps, themeContext],
+  )
 
   const background = useMemo(
     () =>
@@ -161,8 +131,8 @@ function Day({ day, date }: DayProps) {
         normal: themeColors.dayBackground,
         rangeHover: themeColors.dayHoverRangeBackground,
       }),
-    [dayProps, themeContext]
-  );
+    [dayProps, themeContext],
+  )
 
   const color = useMemo(
     () =>
@@ -172,8 +142,8 @@ function Day({ day, date }: DayProps) {
         normal: themeColors.dayColor,
         rangeHover: themeColors.dayHoverRangeColor,
       }),
-    [dayProps, themeContext]
-  );
+    [dayProps, themeContext],
+  )
 
   return (
     <Button
@@ -201,17 +171,12 @@ function Day({ day, date }: DayProps) {
       {typeof onDayRender === 'function' ? (
         onDayRender(date)
       ) : (
-        <Flex
-          justifyContent="center"
-          alignItems="center"
-          height="100%"
-          width="100%"
-        >
+        <Flex justifyContent="center" alignItems="center" height="100%" width="100%">
           {day}
         </Flex>
       )}
     </Button>
-  );
+  )
 }
 
-export default Day;
+export default Day

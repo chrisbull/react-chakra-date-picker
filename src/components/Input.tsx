@@ -12,30 +12,27 @@ import merge from 'ts-deepmerge'
 import { useThemeProps } from '../hooks/useThemeProps'
 
 export interface InputProps extends Omit<ChakraInputProps, 'onChange'> {
-  ariaLabel: string
-  dateFormat: string | FormatFunction
+  onClick(): void
+  value: string
+
+  dateFormat?: string | FormatFunction
   disableAccessibility?: boolean
   iconComponent?: typeof CalendarIcon
-  id: string
-  isActive: boolean
+  id?: string
+  isActive?: boolean
   onChange?(date: Date): void
-  onClick(): void
-  placeholder: string
-  showCalendarIcon: boolean
-  value: string
-  vertical: boolean
+  showCalendarIcon?: boolean
+  vertical?: boolean
 }
 
 export function Input({
-  ariaLabel,
-  dateFormat,
+  dateFormat = 'MM/dd/yyyy',
   disableAccessibility,
   iconComponent = CalendarIcon,
   id,
   isActive,
   onChange = () => {},
   onClick,
-  placeholder,
   showCalendarIcon,
   value,
 }: InputProps) {
@@ -86,8 +83,6 @@ export function Input({
         {...inputProps}
         tabIndex={disableAccessibility ? -1 : 0}
         id={id}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
         value={searchString}
         autoComplete="off"
         onChange={handleOnChange}

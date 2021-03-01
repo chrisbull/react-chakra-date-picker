@@ -119,17 +119,17 @@ export function DateRangeInput({
       <Box position="relative" ref={datepickerWrapperRef}>
         <Stack isInline={!vertical} {...stackStyleProps} data-testid="DateRangeInputGrid">
           <Input
+            aria-label={phrases.startDateAriaLabel}
+            dateFormat={displayFormat}
             id={startDateInputId}
-            ariaLabel={phrases.startDateAriaLabel}
-            placeholder={phrases.startDatePlaceholder}
-            value={getInputValue(startDate, displayFormat, '')}
-            onClick={() => onFocusChange(START_DATE)}
-            showCalendarIcon={showStartDateCalendarIcon}
-            vertical={vertical}
             isActive={focusedInput === START_DATE}
             onChange={handleInputChange}
-            dateFormat={displayFormat}
+            onClick={() => onFocusChange(START_DATE)}
+            placeholder={phrases.startDatePlaceholder}
+            showCalendarIcon={showStartDateCalendarIcon}
             size={size}
+            value={getInputValue(startDate, displayFormat, '')}
+            vertical={vertical}
           />
 
           <Flex alignContent="center" alignItems="center" justifyContent="center">
@@ -137,50 +137,50 @@ export function DateRangeInput({
           </Flex>
 
           <Input
-            id={endDateInputId}
-            ariaLabel={phrases.endDateAriaLabel}
-            placeholder={phrases.endDatePlaceholder}
-            value={getInputValue(endDate, displayFormat, '')}
-            onClick={() => onFocusChange(!startDate ? START_DATE : END_DATE)}
-            showCalendarIcon={showEndDateCalendarIcon}
-            vertical={vertical}
-            isActive={focusedInput === END_DATE}
-            disableAccessibility={focusedInput === START_DATE}
-            onChange={handleInputChange}
+            aria-label={phrases.endDateAriaLabel}
             dateFormat={displayFormat}
+            disableAccessibility={focusedInput === START_DATE}
+            id={endDateInputId}
+            isActive={focusedInput === END_DATE}
+            onChange={handleInputChange}
+            onClick={() => onFocusChange(!startDate ? START_DATE : END_DATE)}
+            placeholder={phrases.endDatePlaceholder}
+            showCalendarIcon={showEndDateCalendarIcon}
             size={size}
+            value={getInputValue(endDate, displayFormat, '')}
+            vertical={vertical}
           />
         </Stack>
 
         <Box position="absolute" top={placement === 'bottom' ? 65 : 0}>
           {focusedInput !== null && (
             <Datepicker
-              onClose={handleDatepickerClose}
-              startDate={startDate}
-              endDate={endDate}
-              minBookingDate={minBookingDate}
-              maxBookingDate={maxBookingDate}
-              firstDayOfWeek={firstDayOfWeek}
-              numberOfMonths={numberOfMonthsProps}
-              focusedInput={focusedInput}
-              displayFormat={displayFormat}
-              onDatesChange={onDatesChange}
-              minBookingDays={minBookingDays}
-              isDateBlocked={isDateBlocked}
-              exactMinBookingDays={exactMinBookingDays}
-              showResetDates={showResetDates}
-              vertical={vertical}
-              showSelectedDates={showSelectedDates}
-              showClose={showClose}
               dayLabelFormat={dayLabelFormat}
-              weekdayLabelFormat={weekdayLabelFormat}
+              displayFormat={displayFormat}
+              endDate={endDate}
+              exactMinBookingDays={exactMinBookingDays}
+              firstDayOfWeek={firstDayOfWeek}
+              focusedInput={focusedInput}
+              initialVisibleMonth={initialVisibleMonth}
+              isDateBlocked={isDateBlocked}
+              maxBookingDate={maxBookingDate}
+              minBookingDate={minBookingDate}
+              minBookingDays={minBookingDays}
               monthLabelFormat={monthLabelFormat}
+              numberOfMonths={numberOfMonthsProps}
+              onClose={handleDatepickerClose}
+              onDatesChange={onDatesChange}
               onDayRender={onDayRender}
               phrases={phrases}
-              unavailableDates={unavailableDates}
               ref={ref}
-              initialVisibleMonth={initialVisibleMonth}
+              showClose={showClose}
+              showResetDates={showResetDates}
+              showSelectedDates={showSelectedDates}
+              startDate={startDate}
               theme={theme}
+              unavailableDates={unavailableDates}
+              vertical={vertical}
+              weekdayLabelFormat={weekdayLabelFormat}
             />
           )}
         </Box>

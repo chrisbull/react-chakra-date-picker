@@ -112,7 +112,7 @@ export const defaultTheme: Theme = {
     width: 'fit-content',
     boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px',
     p: 5,
-    pt: 8,
+    pt: 10,
     zIndex: 1,
   },
 
@@ -256,7 +256,7 @@ export const defaultTheme: Theme = {
   },
 
   actionButton: {
-    size: 'sm',
+    position: 'relative',
   },
   actionButtonLeft: {},
   actionButtonRight: {},

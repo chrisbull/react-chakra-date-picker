@@ -47,7 +47,7 @@ export const Month = ({
       <SimpleGrid {...theme.monthDayGrid} columns={7}>
         {days.map((day: CalendarDay, index: number) => {
           if (typeof day === 'object') {
-            return <Day date={day.date} key={day.dayLabel} day={day.dayLabel} />
+            return <Day date={day.date} key={`${day.dayLabel}-${index}`} day={day.dayLabel} />
           }
           return <div key={index} />
         })}

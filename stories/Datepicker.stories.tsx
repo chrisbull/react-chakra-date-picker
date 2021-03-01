@@ -1,10 +1,11 @@
-import { Meta, Story } from '@storybook/react';
-import React from 'react';
-import { DatepickerDemo } from '../src/components/Datepicker';
+import { FocusedInput, START_DATE } from '@datepicker-react/hooks'
+import { Meta, Story } from '@storybook/react'
+import React, { useState } from 'react'
+import { Datepicker } from '../src'
 
 const meta: Meta = {
-  title: 'DatepickerDemo',
-  component: DatepickerDemo,
+  title: 'Datepicker',
+  component: Datepicker,
   argTypes: {
     children: {
       control: {
@@ -15,14 +16,37 @@ const meta: Meta = {
   parameters: {
     controls: { expanded: true },
   },
-};
+}
 
-export default meta;
+export default meta
 
-const Template: Story<{}> = args => <DatepickerDemo {...args} />;
+interface Props {}
+
+const Template: Story<Props> = args => {
+  const [startDate, setStartDate] = useState<Date | null>(null)
+  const [endDate, setEndDate] = useState<Date | null>(null)
+  const [focusedInput, setFocusedInput] = useState<FocusedInput>(START_DATE)
+
+  return (
+    <>
+      <Datepicker
+        {...args}
+        onDayRender={undefined}
+        startDate={startDate}
+        endDate={endDate}
+        focusedInput={focusedInput}
+        onDatesChange={data => {
+          setStartDate(data.startDate)
+          setEndDate(data.endDate)
+          setFocusedInput(data.focusedInput || START_DATE)
+        }}
+      />
+    </>
+  )
+}
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
-Default.args = {};
+Default.args = {}

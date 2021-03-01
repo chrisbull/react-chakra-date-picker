@@ -229,25 +229,3 @@ export const Datepicker = React.forwardRef(
     )
   },
 )
-
-// export const DatepickerDemo = () => {
-//   const [startDate, setStartDate] = useState<Date | null>(null)
-//   const [endDate, setEndDate] = useState<Date | null>(null)
-//   const [focusedInput, setFocusedInput] = useState<FocusedInput>(START_DATE)
-
-//   return (
-//     <>
-//       <Datepicker
-//         startDate={startDate}
-//         endDate={endDate}
-//         focusedInput={focusedInput}
-//         onDatesChange={data => {
-//           console.log('DatepickerDemo', data)
-//           setStartDate(data.startDate)
-//           setEndDate(data.endDate)
-//           setFocusedInput(data.focusedInput || START_DATE)
-//         }}
-//       />
-//     </>
-//   )
-// }

@@ -30,7 +30,7 @@ export function Input({
   ariaLabel,
   dateFormat,
   disableAccessibility,
-  iconComponent: iconComponent = CalendarIcon,
+  iconComponent = CalendarIcon,
   id,
   isActive,
   onChange = () => {},

@@ -1,5 +1,5 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Box, Flex, Stack, StackProps, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Flex, Stack, StackProps } from '@chakra-ui/react'
 import {
   END_DATE,
   FocusedInput,
@@ -112,15 +112,12 @@ export function DateRangeInput({
     }
   }
 
-  const _vertical = vertical || useBreakpointValue({ base: true, md: false }) || false
-  const stackStyleProps: StackProps = _vertical ? {} : {}
-
-  const numberOfMonths = numberOfMonthsProps || useBreakpointValue({ base: 1, md: 2 })
+  const stackStyleProps: StackProps = vertical ? {} : {}
 
   return (
     <ThemeProvider theme={theme}>
       <Box position="relative" ref={datepickerWrapperRef}>
-        <Stack isInline={!_vertical} {...stackStyleProps} data-testid="DateRangeInputGrid">
+        <Stack isInline={!vertical} {...stackStyleProps} data-testid="DateRangeInputGrid">
           <Input
             id={startDateInputId}
             ariaLabel={phrases.startDateAriaLabel}
@@ -128,7 +125,7 @@ export function DateRangeInput({
             value={getInputValue(startDate, displayFormat, '')}
             onClick={() => onFocusChange(START_DATE)}
             showCalendarIcon={showStartDateCalendarIcon}
-            vertical={_vertical}
+            vertical={vertical}
             isActive={focusedInput === START_DATE}
             onChange={handleInputChange}
             dateFormat={displayFormat}
@@ -136,7 +133,7 @@ export function DateRangeInput({
           />
 
           <Flex alignContent="center" alignItems="center" justifyContent="center">
-            <ArrowForwardIcon transform={`rotate(${_vertical ? 90 : 0}deg)`} />
+            <ArrowForwardIcon transform={`rotate(${vertical ? 90 : 0}deg)`} />
           </Flex>
 
           <Input
@@ -146,7 +143,7 @@ export function DateRangeInput({
             value={getInputValue(endDate, displayFormat, '')}
             onClick={() => onFocusChange(!startDate ? START_DATE : END_DATE)}
             showCalendarIcon={showEndDateCalendarIcon}
-            vertical={_vertical}
+            vertical={vertical}
             isActive={focusedInput === END_DATE}
             disableAccessibility={focusedInput === START_DATE}
             onChange={handleInputChange}
@@ -164,7 +161,7 @@ export function DateRangeInput({
               minBookingDate={minBookingDate}
               maxBookingDate={maxBookingDate}
               firstDayOfWeek={firstDayOfWeek}
-              numberOfMonths={numberOfMonths}
+              numberOfMonths={numberOfMonthsProps}
               focusedInput={focusedInput}
               displayFormat={displayFormat}
               onDatesChange={onDatesChange}

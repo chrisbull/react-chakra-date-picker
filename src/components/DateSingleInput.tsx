@@ -6,7 +6,7 @@ import {
   OnDatesChangeProps,
   START_DATE,
 } from '@datepicker-react/hooks'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ThemeProvider } from '../context/ThemeContext'
 import { Theme } from '../defaultTheme'
 import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases'
@@ -123,70 +123,50 @@ export function DateSingleInput({
     <ThemeProvider theme={theme || {}}>
       <Box position="relative" ref={datepickerWrapperRef}>
         <Input
-          id={inputId}
           ariaLabel={phrases.dateAriaLabel}
-          placeholder={phrases.datePlaceholder}
-          value={getInputValue(date, displayFormat, '')}
-          onClick={() => onFocusChange(true)}
-          showCalendarIcon={showCalendarIcon}
-          vertical={vertical}
+          dateFormat={displayFormat}
+          id={inputId}
           isActive={false}
           onChange={handleInputChange}
-          dateFormat={displayFormat}
+          onClick={() => onFocusChange(true)}
+          placeholder={phrases.datePlaceholder}
+          showCalendarIcon={showCalendarIcon}
+          value={getInputValue(date, displayFormat, '')}
+          vertical={vertical}
         />
         <Box position="absolute" top={placement === 'bottom' ? '65px' : 0}>
           {showDatepicker && (
             <Datepicker
-              exactMinBookingDays
-              minBookingDays={1}
-              onClose={handleDatepickerClose}
-              startDate={date}
-              endDate={date}
-              minBookingDate={minBookingDate}
-              maxBookingDate={maxBookingDate}
-              firstDayOfWeek={firstDayOfWeek}
-              numberOfMonths={numberOfMonths}
-              focusedInput={showDatepicker ? START_DATE : null}
-              displayFormat={displayFormat}
-              onDatesChange={onDatesChange}
-              isDateBlocked={isDateBlocked}
-              showResetDates={showResetDate}
-              vertical={vertical}
-              showSelectedDates={false}
-              showClose={showClose}
               dayLabelFormat={dayLabelFormat}
-              weekdayLabelFormat={weekdayLabelFormat}
+              displayFormat={displayFormat}
+              endDate={date}
+              exactMinBookingDays
+              firstDayOfWeek={firstDayOfWeek}
+              focusedInput={showDatepicker ? START_DATE : null}
+              initialVisibleMonth={initialVisibleMonth}
+              isDateBlocked={isDateBlocked}
+              maxBookingDate={maxBookingDate}
+              minBookingDate={minBookingDate}
+              minBookingDays={1}
               monthLabelFormat={monthLabelFormat}
+              numberOfMonths={numberOfMonths}
+              onClose={handleDatepickerClose}
+              onDatesChange={onDatesChange}
               onDayRender={onDayRender}
               phrases={phrases}
               ref={ref}
-              unavailableDates={unavailableDates}
-              initialVisibleMonth={initialVisibleMonth}
+              showClose={showClose}
+              showResetDates={showResetDate}
+              showSelectedDates={false}
+              startDate={date}
               theme={theme}
+              unavailableDates={unavailableDates}
+              vertical={vertical}
+              weekdayLabelFormat={weekdayLabelFormat}
             />
           )}
         </Box>
       </Box>
     </ThemeProvider>
-  )
-}
-
-export type DateSingleInputDemoProps = {}
-export const DateSingleInputDemo = () => {
-  const [date, setDate] = useState<Date | null>(null)
-  const [showDatepicker, setShowDatepicker] = useState(false)
-
-  return (
-    <DateSingleInput
-      date={date}
-      showDatepicker={showDatepicker}
-      onDateChange={(data: OnDateChangeProps) => {
-        setDate(data.date)
-        setShowDatepicker(data.showDatepicker)
-      }}
-      onFocusChange={(isFocused: boolean) => {
-        setShowDatepicker(isFocused)
-      }}
-    />
   )
 }

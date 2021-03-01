@@ -1,6 +1,7 @@
 import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import { CalendarDay, FirstDayOfWeek, useMonth } from '@datepicker-react/hooks'
 import React from 'react'
+import { useThemeProps } from '../hooks/useThemeProps'
 import Day from './Day'
 
 export interface MonthProps {
@@ -29,15 +30,17 @@ export const Month = ({
     firstDayOfWeek,
   })
 
+  const theme = useThemeProps()
+
   return (
-    <Box>
-      <Flex justifyContent="center" m="0 0 28px">
-        <Text fontWeight="bold">{monthLabel}</Text>
+    <Box {...theme.monthContainer}>
+      <Flex {...theme.monthMonthLabel}>
+        <Text>{monthLabel}</Text>
       </Flex>
       <SimpleGrid columns={7}>
         {weekdayLabels.map((weekdayLabel: string) => (
-          <Flex key={weekdayLabel} justifyContent="center" m="0 0 16px">
-            <Text color="gray.500 ">{weekdayLabel}</Text>
+          <Flex key={weekdayLabel} {...theme.monthWeekdayLabel}>
+            <Text>{weekdayLabel}</Text>
           </Flex>
         ))}
       </SimpleGrid>

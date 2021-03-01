@@ -1,9 +1,6 @@
-import { Meta, Story } from '@storybook/react';
-import React from 'react';
-import {
-  DateRangeInputDemo,
-  DateRangeInputDemoProps,
-} from '../src/components/DateRangeInput';
+import { Meta, Story } from '@storybook/react'
+import React from 'react'
+import { DateRangeInputDemo, DateRangeInputDemoProps } from '../src/demo/DateRangeInputDemo'
 
 const meta: Meta = {
   title: 'DateRangeInputDemo',
@@ -18,16 +15,14 @@ const meta: Meta = {
   parameters: {
     controls: { expanded: true },
   },
-};
+}
 
-export default meta;
+export default meta
 
-const Template: Story<DateRangeInputDemoProps> = args => (
-  <DateRangeInputDemo {...args} />
-);
+const Template: Story<DateRangeInputDemoProps> = args => <DateRangeInputDemo {...args} />
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing
-export const Default = Template.bind({});
+export const Default = Template.bind({})
 
-Default.args = {};
+Default.args = {}

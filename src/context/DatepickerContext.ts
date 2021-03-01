@@ -1,4 +1,7 @@
+import { FocusedInput, FormatFunction } from '@datepicker-react/hooks'
 import React from 'react'
+import { DatepickerPhrases } from '..'
+import { datepickerPhrases } from '../phrases'
 
 export interface DatepickerContextProps {
   rtl: boolean
@@ -12,6 +15,13 @@ export interface DatepickerContextProps {
   isDateBlocked(date: Date): boolean
   isFirstOrLastSelectedDate(date: Date): boolean
   onDayRender?(date: Date): React.ReactNode
+
+  displayFormat: FormatFunction | string
+  startDate: Date | null
+  endDate: Date | null
+  phrases: DatepickerPhrases
+  focusedInput: FocusedInput
+  numberOfMonths?: number
 }
 
 export const datepickerContextDefaultValue = {
@@ -26,6 +36,13 @@ export const datepickerContextDefaultValue = {
   onDateHover: () => {},
   onDateSelect: () => {},
   onDayRender: undefined,
+
+  displayFormat: 'MM/dd/yyyy',
+  startDate: null,
+  endDate: null,
+  phrases: datepickerPhrases,
+  focusedInput: null,
+  numberOfMonths: 2,
 }
 
 export const DatepickerContext = React.createContext(

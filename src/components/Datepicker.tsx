@@ -1,11 +1,8 @@
-import { ArrowForwardIcon, ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Box, CloseButton, Flex, HStack, IconButton, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, HStack, Stack } from '@chakra-ui/react'
 import {
   dayLabelFormat as dayLabelFormatFn,
   END_DATE,
-  FocusedInput,
   FormatFunction,
-  getInputValue,
   monthLabelFormat as monthLabelFormatFn,
   MonthType,
   START_DATE,
@@ -13,14 +10,19 @@ import {
   UseDatepickerProps,
   weekdayLabelFormat as weekdayLabelFormatFn,
 } from '@datepicker-react/hooks'
-import React, { useContext, useImperativeHandle, useRef, useState } from 'react'
+import React, { useImperativeHandle, useRef } from 'react'
 import { DatepickerContext } from '../context/DatepickerContext'
-import { ThemeContext, ThemeProvider } from '../context/ThemeContext'
-import { defaultTheme, Theme } from '../defaultTheme'
+import { ThemeProvider } from '../context/ThemeContext'
+import { Theme } from '../defaultTheme'
+import { useThemeProps } from '../hooks/useThemeProps'
 import { datepickerPhrases, DatepickerPhrases } from '../phrases'
-import { getThemeProp } from '../utils/getThemeProp'
+import { ActionButton } from './ActionButton'
+import { CloseButton } from './CloseButton'
+import { DatepickerContainer } from './DatepickerContainer'
 import { Month } from './Month'
 import { ResetDates } from './ResetDates'
+import { SelectedDate } from './SelectedDate'
+import { SelectedDatesArrow } from './SelectedDatesArrow'
 
 export interface DatepickerProps extends UseDatepickerProps {
   phrases?: DatepickerPhrases
@@ -68,7 +70,7 @@ export const Datepicker = React.forwardRef(
       displayFormat = 'MM/dd/yyyy',
       phrases = datepickerPhrases,
       unavailableDates = [],
-      theme,
+      theme: customTheme,
     }: DatepickerProps,
     ref?: React.Ref<unknown>,
   ) => {
@@ -82,7 +84,7 @@ export const Datepicker = React.forwardRef(
       onResetDates,
       goToPreviousMonths,
       goToNextMonths,
-      // numberOfMonths,
+      numberOfMonths,
       hoveredDate,
       onDateHover,
       isDateFocused,
@@ -110,7 +112,7 @@ export const Datepicker = React.forwardRef(
       },
     }))
     const monthGridRef = useRef<HTMLDivElement>(null)
-    const themeContext = useContext(ThemeContext)
+    const theme = useThemeProps()
 
     function scrollTopToMonthGrid() {
       if (monthGridRef && monthGridRef.current && vertical) {
@@ -129,7 +131,7 @@ export const Datepicker = React.forwardRef(
     }
 
     return (
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={customTheme}>
         <DatepickerContext.Provider
           value={{
             rtl,
@@ -143,111 +145,54 @@ export const Datepicker = React.forwardRef(
             onDateHover,
             onDayRender,
             isDateBlocked: isDateBlockedFn,
+            displayFormat,
+            startDate,
+            endDate,
+            phrases,
+            focusedInput,
+            numberOfMonths,
           }}
         >
-          <Box
-            background="white"
-            borderRadius="sm"
-            position="relative"
-            width="fit-content"
-            boxShadow={'rgba(0, 0, 0, 0.05) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px'}
-            p={5}
-          >
-            {showClose && (
-              <Box position="absolute" top={5} right={5} zIndex={1}>
-                <CloseButton onClick={onClose} />
-              </Box>
-            )}
+          <DatepickerContainer>
+            {showClose && <CloseButton onClick={onClose} />}
 
             {showSelectedDates && (
               <Box mb={6}>
                 <HStack data-testid="SelectedDatesGrid">
-                  <Box
-                    width="100%"
-                    borderBottom="2px solid"
-                    borderBottomColor={focusedInput === START_DATE ? 'teal.300' : 'transparent'}
-                  >
-                    <Box>
-                      <Text fontSize="xs" color="gray.500">
-                        {phrases.datepickerStartDateLabel}
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text fontWeight="bold">
-                        {getInputValue(
-                          startDate,
-                          displayFormat,
-                          phrases.datepickerStartDatePlaceholder,
-                        )}
-                      </Text>
-                    </Box>
-                  </Box>
-                  <Flex justifyContent="center" alignItems="center" padding={5}>
-                    <ArrowForwardIcon
-                      height="15px"
-                      width="15px"
-                      color={getThemeProp(
-                        'silverCloud',
-                        defaultTheme.colors.silverCloud,
-                        themeContext,
-                      )}
-                    />
-                  </Flex>
-                  <Box
-                    width="100%"
-                    borderBottom="2px solid"
-                    borderBottomColor={focusedInput === END_DATE ? 'teal.300' : 'transparent'}
-                  >
-                    <Box>
-                      <Text fontSize="xs" color="gray.500">
-                        {phrases.datepickerEndDateLabel}
-                      </Text>
-                    </Box>
-                    <Box>
-                      <Text fontWeight="bold">
-                        {getInputValue(
-                          endDate,
-                          displayFormat,
-                          phrases.datepickerEndDatePlaceholder,
-                        )}
-                      </Text>
-                    </Box>
-                  </Box>
+                  <SelectedDate date={startDate} isFocused={focusedInput === START_DATE} />
+                  <SelectedDatesArrow />
+                  <SelectedDate date={endDate} isFocused={focusedInput === END_DATE} />
                 </HStack>
               </Box>
             )}
             <Box position="relative">
-              <Box
-                height={vertical ? '50vh' : '100%'}
+              <Stack
                 overflow={vertical ? 'auto' : undefined}
+                data-testid="MonthGrid"
+                isInline={!vertical}
+                ref={monthGridRef}
                 padding={1}
+                {...theme.monthsContainer}
+                onMouseLeave={() => {
+                  if (hoveredDate) {
+                    onDateHover(null)
+                  }
+                }}
               >
-                <Stack
-                  data-testid="MonthGrid"
-                  spacing={8}
-                  isInline={!vertical}
-                  ref={monthGridRef}
-                  onMouseLeave={() => {
-                    if (hoveredDate) {
-                      onDateHover(null)
-                    }
-                  }}
-                >
-                  {activeMonths.map((month: MonthType) => (
-                    <Month
-                      key={`month-${month.year}-${month.month}`}
-                      year={month.year}
-                      month={month.month}
-                      firstDayOfWeek={firstDayOfWeek}
-                      dayLabelFormat={dayLabelFormat || dayLabelFormatFn}
-                      weekdayLabelFormat={weekdayLabelFormat || weekdayLabelFormatFn}
-                      monthLabelFormat={monthLabelFormat || monthLabelFormatFn}
-                    />
-                  ))}
-                </Stack>
-              </Box>
+                {activeMonths.map((month: MonthType) => (
+                  <Month
+                    key={`month-${month.year}-${month.month}`}
+                    year={month.year}
+                    month={month.month}
+                    firstDayOfWeek={firstDayOfWeek}
+                    dayLabelFormat={dayLabelFormat || dayLabelFormatFn}
+                    weekdayLabelFormat={weekdayLabelFormat || weekdayLabelFormatFn}
+                    monthLabelFormat={monthLabelFormat || monthLabelFormatFn}
+                  />
+                ))}
+              </Stack>
 
-              <Flex alignItems="center" pt={5}>
+              <Flex {...theme.bottomContainer}>
                 {showResetDates && (
                   <Flex flex="1">
                     <ResetDates onResetDates={onResetDates} text={phrases.resetDates} />
@@ -260,44 +205,46 @@ export const Datepicker = React.forwardRef(
                   right={!vertical ? 0 : undefined}
                   justifyContent="space-between"
                 >
-                  <IconButton
-                    icon={<ChevronLeftIcon />}
-                    onClick={rtl && !vertical ? handleGoToNextMonth : handleGoToPreviousMonth}
+                  <ActionButton
+                    {...theme.actionButtonLeft}
+                    direction={vertical ? 'up' : 'left'}
+                    onClick={!vertical ? handleGoToNextMonth : handleGoToPreviousMonth}
                     aria-label="Previous month"
                   />
-                  <IconButton
-                    icon={<ChevronRightIcon />}
-                    onClick={rtl && !vertical ? handleGoToPreviousMonth : handleGoToNextMonth}
+                  <ActionButton
+                    {...theme.actionButtonRight}
+                    direction={vertical ? 'down' : 'right'}
+                    onClick={!vertical ? handleGoToPreviousMonth : handleGoToNextMonth}
                     aria-label="Next month"
                   />
                 </HStack>
               </Flex>
             </Box>
-          </Box>
+          </DatepickerContainer>
         </DatepickerContext.Provider>
       </ThemeProvider>
     )
   },
 )
 
-export const DatepickerDemo = () => {
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
-  const [focusedInput, setFocusedInput] = useState<FocusedInput>(START_DATE)
+// export const DatepickerDemo = () => {
+//   const [startDate, setStartDate] = useState<Date | null>(null)
+//   const [endDate, setEndDate] = useState<Date | null>(null)
+//   const [focusedInput, setFocusedInput] = useState<FocusedInput>(START_DATE)
 
-  return (
-    <>
-      <Datepicker
-        startDate={startDate}
-        endDate={endDate}
-        focusedInput={focusedInput}
-        onDatesChange={(data) => {
-          console.log('DatepickerDemo', data)
-          setStartDate(data.startDate)
-          setEndDate(data.endDate)
-          setFocusedInput(data.focusedInput || START_DATE)
-        }}
-      />
-    </>
-  )
-}
+//   return (
+//     <>
+//       <Datepicker
+//         startDate={startDate}
+//         endDate={endDate}
+//         focusedInput={focusedInput}
+//         onDatesChange={data => {
+//           console.log('DatepickerDemo', data)
+//           setStartDate(data.startDate)
+//           setEndDate(data.endDate)
+//           setFocusedInput(data.focusedInput || START_DATE)
+//         }}
+//       />
+//     </>
+//   )
+// }

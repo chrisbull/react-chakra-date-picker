@@ -1,5 +1,5 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Box, Flex, Grid } from '@chakra-ui/react'
+import { Box, Flex, Grid, GridItem, GridProps, useBreakpointValue } from '@chakra-ui/react'
 import {
   END_DATE,
   FocusedInput,
@@ -8,12 +8,12 @@ import {
   START_DATE,
   UseDatepickerProps,
 } from '@datepicker-react/hooks'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ThemeProvider } from '../context/ThemeContext'
 import { Theme } from '../defaultTheme'
 import { DateRangeInputPhrases, dateRangeInputPhrases } from '../phrases'
 import { Datepicker } from './Datepicker'
-import { Input } from './Input'
+import { Input, InputProps } from './Input'
 
 export interface DateRangeInputProps extends UseDatepickerProps {
   displayFormat?: string | FormatFunction
@@ -37,6 +37,7 @@ export interface DateRangeInputProps extends UseDatepickerProps {
   unavailableDates?: Date[]
   initialVisibleMonth?: Date
   theme?: Partial<Theme>
+  size?: InputProps['size']
 }
 
 export function DateRangeInput({
@@ -46,7 +47,7 @@ export function DateRangeInput({
   maxBookingDate,
   firstDayOfWeek,
   onFocusChange,
-  numberOfMonths,
+  numberOfMonths: numberOfMonthsProps,
   focusedInput,
   onDatesChange,
   exactMinBookingDays,
@@ -71,6 +72,7 @@ export function DateRangeInput({
   endDateInputId = 'endDate',
   unavailableDates = [],
   theme,
+  size,
 }: DateRangeInputProps) {
   const ref = useRef(null)
   const datepickerWrapperRef = useRef<HTMLDivElement>(null)
@@ -110,42 +112,70 @@ export function DateRangeInput({
     }
   }
 
+  const gridStyleProps: GridProps = vertical
+    ? {
+        gridTemplateColumns: '1.9fr 0.1fr',
+        gridTemplateRows: 'repeat(2, 1fr)',
+        gridTemplateAreas: `"Start Arrow" "End Arrow"`,
+        gap: 4,
+      }
+    : {
+        gridTemplateColumns: '1.3fr 0.1fr 1.3fr',
+        gridTemplateRows: '1fr',
+        gridTemplateAreas: `"Start Arrow End"`,
+        gap: 4,
+      }
+
+  const numberOfMonths = numberOfMonthsProps || useBreakpointValue({ base: 1, md: 2 })
+
   return (
     <ThemeProvider theme={theme}>
       <Box position="relative" ref={datepickerWrapperRef}>
-        <Grid
-          data-testid="DateRangeInputGrid"
-          gridTemplateColumns={vertical ? '1fr 24px 1fr' : '194px 39px 194px'}
-        >
-          <Input
-            id={startDateInputId}
-            ariaLabel={phrases.startDateAriaLabel}
-            placeholder={phrases.startDatePlaceholder}
-            value={getInputValue(startDate, displayFormat, '')}
-            onClick={() => onFocusChange(START_DATE)}
-            showCalendarIcon={showStartDateCalendarIcon}
-            vertical={vertical}
-            isActive={focusedInput === START_DATE}
-            onChange={handleInputChange}
-            dateFormat={displayFormat}
-          />
-          <Flex alignItems="center" justifyContent="center">
-            <ArrowForwardIcon color="gray.500" />
-          </Flex>
-          <Input
-            id={endDateInputId}
-            ariaLabel={phrases.endDateAriaLabel}
-            placeholder={phrases.endDatePlaceholder}
-            value={getInputValue(endDate, displayFormat, '')}
-            onClick={() => onFocusChange(!startDate ? START_DATE : END_DATE)}
-            showCalendarIcon={showEndDateCalendarIcon}
-            vertical={vertical}
-            isActive={focusedInput === END_DATE}
-            disableAccessibility={focusedInput === START_DATE}
-            onChange={handleInputChange}
-            dateFormat={displayFormat}
-          />
+        <Grid {...gridStyleProps} data-testid="DateRangeInputGrid">
+          <GridItem gridArea="Start">
+            <Input
+              id={startDateInputId}
+              ariaLabel={phrases.startDateAriaLabel}
+              placeholder={phrases.startDatePlaceholder}
+              value={getInputValue(startDate, displayFormat, '')}
+              onClick={() => onFocusChange(START_DATE)}
+              showCalendarIcon={showStartDateCalendarIcon}
+              vertical={vertical}
+              isActive={focusedInput === START_DATE}
+              onChange={handleInputChange}
+              dateFormat={displayFormat}
+              size={size}
+            />
+          </GridItem>
+          <GridItem gridArea="Arrow">
+            <Flex
+              h="100%"
+              w="100%"
+              alignContent="center"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <ArrowForwardIcon transform={`rotate(${vertical ? 90 : 0}deg)`} />
+            </Flex>
+          </GridItem>
+          <GridItem gridArea="End">
+            <Input
+              id={endDateInputId}
+              ariaLabel={phrases.endDateAriaLabel}
+              placeholder={phrases.endDatePlaceholder}
+              value={getInputValue(endDate, displayFormat, '')}
+              onClick={() => onFocusChange(!startDate ? START_DATE : END_DATE)}
+              showCalendarIcon={showEndDateCalendarIcon}
+              vertical={vertical}
+              isActive={focusedInput === END_DATE}
+              disableAccessibility={focusedInput === START_DATE}
+              onChange={handleInputChange}
+              dateFormat={displayFormat}
+              size={size}
+            />
+          </GridItem>
         </Grid>
+
         <Box position="absolute" top={placement === 'bottom' ? 65 : 0}>
           {focusedInput !== null && (
             <Datepicker
@@ -180,32 +210,5 @@ export function DateRangeInput({
         </Box>
       </Box>
     </ThemeProvider>
-  )
-}
-
-export interface DateRangeInputDemoProps {
-  vertical?: boolean
-}
-
-export const DateRangeInputDemo: React.FC<DateRangeInputDemoProps> = ({ vertical = false }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null)
-  const [endDate, setEndDate] = useState<Date | null>(null)
-  const [focusedInput, setFocusedInput] = useState<FocusedInput>(null)
-
-  return (
-    <DateRangeInput
-      vertical={vertical}
-      startDate={startDate}
-      endDate={endDate}
-      focusedInput={focusedInput}
-      onDatesChange={(data) => {
-        setStartDate(data.startDate)
-        setEndDate(data.endDate)
-        setFocusedInput(data.focusedInput)
-      }}
-      onFocusChange={(focused) => {
-        setFocusedInput(focused)
-      }}
-    />
   )
 }

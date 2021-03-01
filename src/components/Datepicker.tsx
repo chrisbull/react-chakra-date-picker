@@ -1,6 +1,7 @@
 import { Box, Flex, HStack, Stack } from '@chakra-ui/react'
+import format from 'date-fns/format'
 import {
-  dayLabelFormat as dayLabelFormatFn,
+  // dayLabelFormat as dayLabelFormatFn,
   END_DATE,
   FormatFunction,
   monthLabelFormat as monthLabelFormatFn,
@@ -23,6 +24,8 @@ import { Month } from './Month'
 import { ResetDates } from './ResetDates'
 import { SelectedDate } from './SelectedDate'
 import { SelectedDatesArrow } from './SelectedDatesArrow'
+
+export const dayLabelFormatFn = (date: Date) => format(date, 'd')
 
 export interface DatepickerProps extends UseDatepickerProps {
   phrases?: DatepickerPhrases

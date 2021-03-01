@@ -8,6 +8,7 @@ import {
   InputProps,
   StackProps,
   CloseButtonProps,
+  SimpleGridProps,
 } from '@chakra-ui/react'
 
 export type Theme = {
@@ -43,11 +44,23 @@ export type Theme = {
   monthContainer: BoxProps
   monthMonthLabel: BoxProps
   monthWeekdayLabel: BoxProps
+  monthDayGrid: SimpleGridProps
 
+  dayBase: ButtonProps
   dayNormal: ButtonProps
   dayRangeHover: ButtonProps
   daySelected: ButtonProps
   daySelectedFirstOrLast: ButtonProps
+  daySelectedFirst: ButtonProps
+  daySelectedLast: ButtonProps
+
+  dayBaseContainer: ButtonProps
+  dayNormalContainer: BoxProps
+  dayRangeHoverContainer: BoxProps
+  daySelectedContainer: BoxProps
+  daySelectedFirstOrLastContainer: BoxProps
+  daySelectedFirstContainer: BoxProps
+  daySelectedLastContainer: BoxProps
 
   resetDatesButton: ButtonProps
 
@@ -77,7 +90,7 @@ export const defaultTheme: Theme = {
     mud: 'gray.500',
     darcula: 'gray.700',
     greey: 'gray.400',
-    silverCloud: 'gray.300',
+    silverCloud: 'gray.100',
     graci: 'gray.200',
     normalDayHover: 'gray.200',
     white: 'white',
@@ -99,6 +112,7 @@ export const defaultTheme: Theme = {
     width: 'fit-content',
     boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px',
     p: 5,
+    pt: 8,
     zIndex: 1,
   },
 
@@ -141,56 +155,96 @@ export const defaultTheme: Theme = {
   monthContainer: {},
   monthMonthLabel: {
     justifyContent: 'center',
-    m: '0 0 28px',
     fontWeight: 'bold',
+    mb: 6,
+    fontSize: ['md', 'lg'],
   },
   monthWeekdayLabel: {
     justifyContent: 'center',
-    m: '0 0 16px',
     color: 'gray.500',
+    mb: 4,
+    fontSize: ['sm', 'md'],
+  },
+  monthDayGrid: {
+    rowGap: 1,
   },
 
-  dayNormal: {
+  //
+  dayBase: {
     height: ['32px', '48px'],
     width: ['32px', '48px'],
-    background: 'white',
-    borderColor: 'gray.200',
-    color: 'gray.800',
-    fontWeight: 'md',
-    fontSize: [12, 16],
-    borderRadius: 0,
-
+    pl: 0,
+    pr: 0,
+    minWidth: 'unset',
+    fontWeight: 'medium',
+    fontSize: ['sm', 'md'],
+    border: '2px solid',
+    borderRadius: '100%',
+    borderColor: 'transparent',
+    background: 'transparent',
     _hover: {
-      color: 'white',
-      background: 'blue.500',
-      borderColor: 'blue.500',
+      borderColor: 'transparent',
+      background: 'transparent',
+    },
+  },
+  dayNormal: {
+    color: 'gray.900',
+    _hover: {
+      borderColor: 'black',
     },
   },
   dayRangeHover: {
-    color: 'white',
-    background: 'blue.200',
-    borderColor: 'blue.200',
     _hover: {
-      background: 'blue.300',
-      borderColor: 'blue.300',
+      borderColor: 'black',
     },
   },
   daySelected: {
-    color: 'white',
-    background: 'blue.200',
-    borderColor: 'blue.200',
     _hover: {
-      background: 'blue.300',
-      borderColor: 'blue.300',
+      borderColor: 'black',
     },
   },
   daySelectedFirstOrLast: {
     color: 'white',
-    background: 'blue.500',
-    borderColor: 'blue.500',
+    background: 'black',
     _hover: {
-      background: 'blue.500',
-      borderColor: 'blue.500',
+      color: 'white',
+      background: 'black',
+    },
+  },
+  daySelectedFirst: {},
+  daySelectedLast: {},
+
+  //
+  dayBaseContainer: {
+    height: ['32px', '48px'],
+    width: ['32px', '48px'],
+    _hover: {
+      borderRightRadius: '100%',
+    },
+  },
+  dayNormalContainer: {},
+  dayRangeHoverContainer: {
+    background: 'gray.100',
+    _hover: {
+      borderRightRadius: '100%',
+    },
+  },
+  daySelectedContainer: {
+    background: 'gray.100',
+    _hover: {
+      borderRightRadius: '0%',
+    },
+  },
+  daySelectedFirstOrLastContainer: {
+    background: 'gray.100',
+  },
+  daySelectedFirstContainer: {
+    borderLeftRadius: '100%',
+  },
+  daySelectedLastContainer: {
+    borderRightRadius: '100%',
+    _hover: {
+      borderRightRadius: '100%',
     },
   },
 

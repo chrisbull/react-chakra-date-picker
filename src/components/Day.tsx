@@ -1,10 +1,58 @@
-import { Button, Flex, useTheme } from '@chakra-ui/react'
-import { getColor } from '@chakra-ui/theme-tools'
-import { useDay } from '@datepicker-react/hooks'
-import React, { useContext, useRef } from 'react'
+import { Box, Button, Flex } from '@chakra-ui/react'
+import { isEndDate, isStartDate, useDay } from '@datepicker-react/hooks'
+import React, { useRef } from 'react'
 import merge from 'ts-deepmerge'
-import { DatepickerContext } from '../context/DatepickerContext'
+import { useDatepickerContext } from '../hooks/useDatepickerContext'
 import { useThemeProps } from '../hooks/useThemeProps'
+
+function getColor(
+  {
+    isSelected,
+    isWithinHoverRange,
+    isFirst,
+    isLast,
+  }: {
+    isSelected: boolean
+    isWithinHoverRange: boolean
+    isFirst: boolean
+    isLast: boolean
+    isSelectedStartOrEnd: boolean
+    disabledDate: boolean
+  },
+  {
+    base,
+    normal,
+    rangeHover,
+    selected,
+    firstOrLast,
+    first,
+    last,
+  }: {
+    base: any
+    normal: any
+    rangeHover: any
+    selected: any
+    firstOrLast: any
+    first: any
+    last: any
+  },
+) {
+  let style = isSelected ? selected : isWithinHoverRange ? rangeHover : normal
+
+  if (isFirst || isLast) {
+    style = merge(style, firstOrLast)
+  }
+
+  if (isFirst) {
+    style = merge(style, first)
+  }
+
+  if (isLast) {
+    style = merge(style, last)
+  }
+
+  return merge(base, style)
+}
 
 interface DayProps {
   day: string
@@ -25,7 +73,9 @@ function Day({ day, date }: DayProps) {
     onDateFocus,
     onDateHover,
     onDayRender,
-  } = useContext(DatepickerContext)
+    startDate,
+    endDate,
+  } = useDatepickerContext()
 
   const dayProps = useDay({
     date,
@@ -41,52 +91,86 @@ function Day({ day, date }: DayProps) {
     dayRef,
   })
 
-  const { onClick, onKeyDown, onMouseEnter, tabIndex } = dayProps
+  const {
+    onClick,
+    onKeyDown,
+    onMouseEnter,
+    tabIndex,
+    isSelectedStartOrEnd,
+    isSelected,
+    isWithinHoverRange,
+    disabledDate,
+  } = dayProps
 
   const theme = useThemeProps()
 
-  const chakraTheme = useTheme()
+  const isFirst = isStartDate(date, startDate)
+  const isLast = isEndDate(date, endDate)
 
-  const { isSelectedStartOrEnd, isSelected, isWithinHoverRange } = dayProps
-
-  const { borderColor, ...buttonStyle } = merge(
-    theme.dayNormal,
-    isSelectedStartOrEnd
-      ? theme.daySelectedFirstOrLast
-      : isSelected
-      ? theme.daySelected
-      : isWithinHoverRange
-      ? theme.dayRangeHover
-      : {},
+  const containerStyle = getColor(
+    {
+      isFirst,
+      isLast,
+      isSelected,
+      isWithinHoverRange,
+      isSelectedStartOrEnd,
+      disabledDate,
+    },
+    {
+      base: theme.dayBaseContainer,
+      normal: theme.dayNormalContainer,
+      rangeHover: theme.dayRangeHoverContainer,
+      selected: theme.daySelectedContainer,
+      first: theme.daySelectedFirstContainer,
+      last: theme.daySelectedLastContainer,
+      firstOrLast: theme.daySelectedFirstOrLastContainer,
+    },
   )
 
-  const _borderColor = getColor(chakraTheme, borderColor as string)
+  const buttonStyle = getColor(
+    {
+      isFirst,
+      isLast,
+      isSelected,
+      isWithinHoverRange,
+      isSelectedStartOrEnd,
+      disabledDate,
+    },
+    {
+      base: theme.dayBase,
+      normal: theme.dayNormal,
+      rangeHover: theme.dayRangeHover,
+      selected: theme.daySelected,
+      first: theme.daySelectedFirst,
+      last: theme.daySelectedLast,
+      firstOrLast: theme.daySelectedFirstOrLast,
+    },
+  )
 
   return (
-    <Button
-      onClick={onClick}
-      onKeyDown={onKeyDown}
-      onMouseEnter={onMouseEnter}
-      tabIndex={tabIndex}
-      ref={dayRef}
-      {...buttonStyle}
-      boxShadow={`1px 0 0 0 ${_borderColor},
-        0 1px 0 0 ${_borderColor},
-        1px 1px 0 0 ${_borderColor},
-        1px 0 0 0 ${_borderColor} inset,
-        0 1px 0 0 ${_borderColor} inset`}
-      data-testid="Day"
-      aria-label={`Day-${date.toDateString()}`}
-      type="button"
-    >
-      {typeof onDayRender === 'function' ? (
-        onDayRender(date)
-      ) : (
-        <Flex justifyContent="center" alignItems="center" height="100%" width="100%">
-          {day}
-        </Flex>
-      )}
-    </Button>
+    <Box {...containerStyle}>
+      <Button
+        variant="unstyled"
+        onClick={onClick}
+        onKeyDown={onKeyDown}
+        onMouseEnter={onMouseEnter}
+        tabIndex={tabIndex}
+        ref={dayRef}
+        disabled={disabledDate}
+        {...buttonStyle}
+        data-testid="Day"
+        aria-label={`Day-${date.toDateString()}`}
+        type="button"
+      >
+        {typeof onDayRender === 'function' ? (
+          onDayRender(date)
+        ) : (
+          <Flex justifyContent="center" alignItems="center" height="100%" width="100%">
+            {day}
+          </Flex>
+        )}
+      </Button>
+    </Box>
   )
 }
 

@@ -9,9 +9,9 @@ import {
   UseDatepickerProps,
 } from '@datepicker-react/hooks'
 import React, { useEffect, useRef } from 'react'
-import { ThemeProvider } from '../context/ThemeContext'
-import { Theme } from '../defaultTheme'
+import merge from 'ts-deepmerge'
 import { DateRangeInputPhrases, dateRangeInputPhrases } from '../phrases'
+import { datepickerTheme, DatepickerTheme, DatepickerThemeProvider } from '../theme'
 import { Datepicker } from './Datepicker'
 import { Input, InputProps } from './Input'
 
@@ -36,8 +36,9 @@ export interface DateRangeInputProps extends UseDatepickerProps {
   endDateInputId?: string
   unavailableDates?: Date[]
   initialVisibleMonth?: Date
-  theme?: Partial<Theme>
+  theme?: Partial<DatepickerTheme>
   size?: InputProps['size']
+  resetStyles?: boolean
 }
 
 export function DateRangeInput({
@@ -71,8 +72,9 @@ export function DateRangeInput({
   startDateInputId = 'startDate',
   endDateInputId = 'endDate',
   unavailableDates = [],
-  theme,
+  theme: customTheme = {},
   size,
+  resetStyles = false,
 }: DateRangeInputProps) {
   const ref = useRef(null)
   const datepickerWrapperRef = useRef<HTMLDivElement>(null)
@@ -114,8 +116,10 @@ export function DateRangeInput({
 
   const stackStyleProps: StackProps = vertical ? {} : {}
 
+  const theme = resetStyles ? (customTheme as DatepickerTheme) : merge(datepickerTheme, customTheme)
+
   return (
-    <ThemeProvider theme={theme}>
+    <DatepickerThemeProvider theme={theme}>
       <Box position="relative" ref={datepickerWrapperRef}>
         <Stack isInline={!vertical} {...stackStyleProps} data-testid="DateRangeInputGrid">
           <Input
@@ -185,6 +189,6 @@ export function DateRangeInput({
           )}
         </Box>
       </Box>
-    </ThemeProvider>
+    </DatepickerThemeProvider>
   )
 }

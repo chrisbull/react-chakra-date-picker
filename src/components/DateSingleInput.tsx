@@ -7,9 +7,9 @@ import {
   START_DATE,
 } from '@datepicker-react/hooks'
 import React, { useEffect, useRef } from 'react'
-import { ThemeProvider } from '../context/ThemeContext'
-import { Theme } from '../defaultTheme'
+import merge from 'ts-deepmerge'
 import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases'
+import { datepickerTheme, DatepickerTheme, DatepickerThemeProvider } from '../theme'
 import { Datepicker } from './Datepicker'
 import { Input, InputProps } from './Input'
 
@@ -41,10 +41,11 @@ export interface DateSingleInputProps extends Partial<InputProps> {
   showClose?: boolean
   showDatepicker: boolean
   showResetDate?: boolean
-  theme?: Theme
+  theme?: Partial<DatepickerTheme> | DatepickerTheme
   unavailableDates?: Date[]
   vertical?: boolean
   weekdayLabelFormat?(date: Date): string
+  resetStyles?: boolean
 }
 
 export const DateSingleInput = React.forwardRef(
@@ -71,11 +72,12 @@ export const DateSingleInput = React.forwardRef(
       showClose = true,
       showDatepicker,
       showResetDate = true,
-      theme,
+      theme: customTheme = {},
       unavailableDates = [],
       vertical = false,
       weekdayLabelFormat,
       rtl = false,
+      resetStyles = false,
 
       ...inputProps
     }: DateSingleInputProps,
@@ -126,8 +128,12 @@ export const DateSingleInput = React.forwardRef(
       }
     }
 
+    const theme = resetStyles
+      ? (customTheme as DatepickerTheme)
+      : merge(datepickerTheme, customTheme)
+
     return (
-      <ThemeProvider theme={theme || {}}>
+      <DatepickerThemeProvider theme={theme}>
         <Box position="relative" ref={datepickerWrapperRef}>
           <Input
             {...inputProps}
@@ -175,7 +181,7 @@ export const DateSingleInput = React.forwardRef(
             )}
           </Box>
         </Box>
-      </ThemeProvider>
+      </DatepickerThemeProvider>
     )
   },
 )

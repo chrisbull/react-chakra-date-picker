@@ -3,7 +3,7 @@ import { getInputValue } from '@datepicker-react/hooks'
 import React from 'react'
 import merge from 'ts-deepmerge'
 import { useDatepickerContext } from '../hooks/useDatepickerContext'
-import { useThemeProps } from '../hooks/useThemeProps'
+import { useThemeContext } from '../hooks/useThemeContext'
 
 export interface SelectedDateProps {
   isFocused: boolean
@@ -12,7 +12,7 @@ export interface SelectedDateProps {
 
 export const SelectedDate = ({ isFocused, date }: SelectedDateProps) => {
   const { phrases, displayFormat } = useDatepickerContext()
-  const theme = useThemeProps()
+  const theme = useThemeContext()
 
   const containerProps = merge(
     theme.selectedDateContainer,

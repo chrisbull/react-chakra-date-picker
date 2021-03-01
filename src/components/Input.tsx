@@ -9,7 +9,7 @@ import {
 import { FormatFunction, parseDate } from '@datepicker-react/hooks'
 import React, { useEffect, useRef, useState } from 'react'
 import merge from 'ts-deepmerge'
-import { useThemeProps } from '../hooks/useThemeProps'
+import { useThemeContext } from '../hooks/useThemeContext'
 
 export interface InputProps extends Omit<ChakraInputProps, 'onChange'> {
   onClick(): void
@@ -38,7 +38,7 @@ export function Input({
 }: InputProps) {
   const [searchString, setSearchString] = useState(value)
 
-  const theme = useThemeProps()
+  const theme = useThemeContext()
 
   const ref = useRef<unknown>(null)
 

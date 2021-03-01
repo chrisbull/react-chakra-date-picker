@@ -26,7 +26,7 @@ export interface DateSingleInputPhrases extends DatepickerPhrases {
   datePlaceholder: string
 }
 
-export const datepickerPhrases = {
+export const datepickerPhrases: DatepickerPhrases = {
   datepickerStartDatePlaceholder: 'Select',
   datepickerStartDateLabel: 'Start date:',
   datepickerEndDatePlaceholder: 'Select',
@@ -35,7 +35,7 @@ export const datepickerPhrases = {
   close: 'Close',
 }
 
-export const dateRangeInputPhrases = {
+export const dateRangeInputPhrases: DateRangeInputPhrases = {
   ...datepickerPhrases,
 
   startDateAriaLabel: 'Start date',
@@ -45,7 +45,7 @@ export const dateRangeInputPhrases = {
   endDatePlaceholder: 'End date',
 }
 
-export const dateSingleInputPhrases = {
+export const dateSingleInputPhrases: DateSingleInputPhrases = {
   ...datepickerPhrases,
   dateAriaLabel: 'Select date',
   datePlaceholder: 'Select date',

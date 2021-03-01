@@ -1,14 +1,14 @@
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { IconButton, IconButtonProps } from '@chakra-ui/react'
 import React from 'react'
-import { useThemeProps } from '../hooks/useThemeProps'
+import { useThemeContext } from '../hooks/useThemeContext'
 
 export interface ActionButtonProps extends IconButtonProps {
   direction?: 'up' | 'right' | 'down' | 'left'
 }
 
 export const ActionButton: React.FC<ActionButtonProps> = ({ direction, ...props }) => {
-  const theme = useThemeProps()
+  const theme = useThemeContext()
 
   let IconComponent = ChevronLeftIcon
 

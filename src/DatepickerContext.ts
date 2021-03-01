@@ -1,7 +1,6 @@
 import { FocusedInput, FormatFunction } from '@datepicker-react/hooks'
 import React from 'react'
-import { DatepickerPhrases } from '..'
-import { datepickerPhrases } from '../phrases'
+import { DatepickerPhrases, datepickerPhrases } from './phrases'
 
 export interface DatepickerContextProps {
   rtl: boolean

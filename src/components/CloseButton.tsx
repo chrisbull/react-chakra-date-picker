@@ -3,11 +3,11 @@ import {
   CloseButtonProps as ChakraCloseButtonProps,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useThemeProps } from '../hooks/useThemeProps'
+import { useThemeContext } from '../hooks/useThemeContext'
 
 export interface CloseButtonProps extends ChakraCloseButtonProps {}
 
 export const CloseButton: React.FC<CloseButtonProps> = props => {
-  const theme = useThemeProps()
+  const theme = useThemeContext()
   return <ChakraCloseButton {...props} {...theme.closeButton} />
 }

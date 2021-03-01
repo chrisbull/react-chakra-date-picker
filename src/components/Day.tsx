@@ -3,7 +3,7 @@ import { isEndDate, isStartDate, useDay } from '@datepicker-react/hooks'
 import React, { useRef } from 'react'
 import merge from 'ts-deepmerge'
 import { useDatepickerContext } from '../hooks/useDatepickerContext'
-import { useThemeProps } from '../hooks/useThemeProps'
+import { useThemeContext } from '../hooks/useThemeContext'
 
 function getColor(
   {
@@ -102,7 +102,7 @@ function Day({ day, date }: DayProps) {
     disabledDate,
   } = dayProps
 
-  const theme = useThemeProps()
+  const theme = useThemeContext()
 
   const isFirst = isStartDate(date, startDate)
   const isLast = isEndDate(date, endDate)

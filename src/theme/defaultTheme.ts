@@ -11,22 +11,7 @@ import {
   SimpleGridProps,
 } from '@chakra-ui/react'
 
-export type Theme = {
-  colors: {
-    primaryColor: string
-    accessibility: string
-    selectedDay: string
-    selectedDayHover: string
-    charcoal: string
-    mud: string
-    darcula: string
-    greey: string
-    silverCloud: string
-    graci: string
-    normalDayHover: string
-    white: string
-  }
-
+export type DatepickerTheme = {
   datepickerContainer: BoxProps
 
   closeButton: CloseButtonProps
@@ -80,22 +65,7 @@ export type Theme = {
   inputLeftAddonActive: InputAddonProps
 }
 
-export const defaultTheme: Theme = {
-  colors: {
-    primaryColor: 'blue.500',
-    accessibility: 'blue.500',
-    selectedDay: 'blue.200',
-    selectedDayHover: 'blue.300',
-    charcoal: 'gray.900',
-    mud: 'gray.500',
-    darcula: 'gray.700',
-    greey: 'gray.400',
-    silverCloud: 'gray.100',
-    graci: 'gray.200',
-    normalDayHover: 'gray.200',
-    white: 'white',
-  },
-
+export const datepickerTheme: DatepickerTheme = {
   inputContainer: {},
   inputContainerActive: {},
   input: {},

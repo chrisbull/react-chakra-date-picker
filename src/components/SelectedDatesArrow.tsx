@@ -1,14 +1,14 @@
 import { ArrowDownIcon, ArrowForwardIcon, ArrowLeftIcon, ArrowUpIcon } from '@chakra-ui/icons'
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
-import { useThemeProps } from '../hooks/useThemeProps'
+import { useThemeContext } from '../hooks/useThemeContext'
 
 export interface SelectedDatesArrowProps {
   direction?: 'up' | 'right' | 'down' | 'left'
 }
 
 export const SelectedDatesArrow: React.FC<SelectedDatesArrowProps> = ({ direction = 'right' }) => {
-  const theme = useThemeProps()
+  const theme = useThemeContext()
 
   let Component = ArrowForwardIcon
 

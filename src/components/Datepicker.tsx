@@ -1,5 +1,4 @@
 import { Box, Flex, HStack, Stack } from '@chakra-ui/react'
-import format from 'date-fns/format'
 import {
   // dayLabelFormat as dayLabelFormatFn,
   END_DATE,
@@ -11,12 +10,12 @@ import {
   UseDatepickerProps,
   weekdayLabelFormat as weekdayLabelFormatFn,
 } from '@datepicker-react/hooks'
+import format from 'date-fns/format'
 import React, { useImperativeHandle, useRef } from 'react'
-import { DatepickerContext } from '../context/DatepickerContext'
-import { ThemeProvider } from '../context/ThemeContext'
-import { Theme } from '../defaultTheme'
-import { useThemeProps } from '../hooks/useThemeProps'
+import merge from 'ts-deepmerge'
+import { DatepickerContext } from '../DatepickerContext'
 import { datepickerPhrases, DatepickerPhrases } from '../phrases'
+import { datepickerTheme, DatepickerTheme, DatepickerThemeProvider } from '../theme'
 import { ActionButton } from './ActionButton'
 import { CloseButton } from './CloseButton'
 import { DatepickerContainer } from './DatepickerContainer'
@@ -42,7 +41,8 @@ export interface DatepickerProps extends UseDatepickerProps {
   monthLabelFormat?(date: Date): string
   onDayRender?(date: Date): React.ReactNode
   unavailableDates?: Date[]
-  theme?: Partial<Theme>
+  theme?: Partial<DatepickerTheme> | DatepickerTheme
+  resetStyles?: boolean
 }
 
 export const Datepicker = React.forwardRef(
@@ -73,7 +73,8 @@ export const Datepicker = React.forwardRef(
       displayFormat = 'MM/dd/yyyy',
       phrases = datepickerPhrases,
       unavailableDates = [],
-      theme: customTheme,
+      theme: customTheme = {},
+      resetStyles = false,
     }: DatepickerProps,
     ref?: React.Ref<unknown>,
   ) => {
@@ -115,7 +116,6 @@ export const Datepicker = React.forwardRef(
       },
     }))
     const monthGridRef = useRef<HTMLDivElement>(null)
-    const theme = useThemeProps()
 
     function scrollTopToMonthGrid() {
       if (monthGridRef && monthGridRef.current && vertical) {
@@ -133,8 +133,12 @@ export const Datepicker = React.forwardRef(
       scrollTopToMonthGrid()
     }
 
+    const theme = resetStyles
+      ? (customTheme as DatepickerTheme)
+      : merge(datepickerTheme, customTheme)
+
     return (
-      <ThemeProvider theme={customTheme}>
+      <DatepickerThemeProvider theme={theme}>
         <DatepickerContext.Provider
           value={{
             rtl,
@@ -225,7 +229,7 @@ export const Datepicker = React.forwardRef(
             </Box>
           </DatepickerContainer>
         </DatepickerContext.Provider>
-      </ThemeProvider>
+      </DatepickerThemeProvider>
     )
   },
 )

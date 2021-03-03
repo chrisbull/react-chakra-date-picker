@@ -1,93 +1,140 @@
-import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Box, Flex, Stack, StackProps } from '@chakra-ui/react'
+import { CalendarIcon } from '@chakra-ui/icons'
+import { Box, Icon, Stack, StackDivider, useBreakpointValue } from '@chakra-ui/react'
 import {
   END_DATE,
+  FirstDayOfWeek,
   FocusedInput,
   FormatFunction,
   getInputValue,
+  OnDatesChangeProps,
   START_DATE,
-  UseDatepickerProps,
 } from '@datepicker-react/hooks'
-import React, { useEffect, useRef } from 'react'
-import merge from 'ts-deepmerge'
-import { DateRangeInputPhrases, dateRangeInputPhrases } from '../phrases'
-import { datepickerTheme, DatepickerTheme, DatepickerThemeProvider } from '../theme'
+import React, { Ref, useEffect, useRef, useState } from 'react'
+import { DatepickerStyles, StylesContextProvider, useStyles } from '../context/StylesContext'
+import { dateRangeInputPhrases, DateRangeInputPhrases } from '../phrases'
+import { InputDate } from '../types'
 import { Datepicker } from './Datepicker'
-import { Input, InputProps } from './Input'
+import { Input } from './Input'
 
-export interface DateRangeInputProps extends UseDatepickerProps {
-  displayFormat?: string | FormatFunction
+export interface DateRangeInputProps {
+  ids: [string, string]
+  names?: [string, string]
+  placeholders?: [string, string]
+  refs?: [Ref<any>, Ref<any>]
+  showCalendarIcons?: [boolean, boolean]
+  dates?: [InputDate, InputDate]
+  icons?: [typeof Icon, typeof Icon]
+
+  onFocusChange?(focusInput: FocusedInput): void
   phrases?: DateRangeInputPhrases
-  onFocusChange(focusInput: FocusedInput): void
-  showStartDateCalendarIcon?: boolean
-  showEndDateCalendarIcon?: boolean
+  placement?: 'top' | 'bottom'
+
+  // DatepickerProps
+  displayFormat?: string | FormatFunction
   onClose?(): void
-  vertical?: boolean
+  onDayRender?(date: Date): React.ReactNode
+  showClose?: boolean
   showResetDates?: boolean
   showSelectedDates?: boolean
-  showClose?: boolean
-  rtl?: boolean
-  placement?: 'top' | 'bottom'
+  showDivider?: boolean
+  vertical?: boolean
+  overwriteDefaultStyles?: boolean
+  styles?: Partial<DatepickerStyles>
   dayLabelFormat?(date: Date): string
-  weekdayLabelFormat?(date: Date): string
   monthLabelFormat?(date: Date): string
-  onDayRender?(date: Date): React.ReactNode
-  startDateInputId?: string
-  endDateInputId?: string
-  unavailableDates?: Date[]
+  weekdayLabelFormat?(date: Date): string
+
+  // UseDatepickerProps
+  onDatesChange?(data: OnDatesChangeProps): void
+  minBookingDate?: Date
+  maxBookingDate?: Date
+
+  focusedInput?: FocusedInput
+  numberOfMonths?: number
+  minBookingDays?: number
+  exactMinBookingDays?: boolean
+  firstDayOfWeek?: FirstDayOfWeek
   initialVisibleMonth?: Date
-  theme?: Partial<DatepickerTheme>
-  size?: InputProps['size']
-  resetStyles?: boolean
+  isDateBlocked?(date: Date): boolean
+  unavailableDates?: Date[]
+  changeActiveMonthOnSelect?: boolean
 }
 
-export function DateRangeInput({
-  startDate,
-  endDate,
-  minBookingDate,
-  maxBookingDate,
-  firstDayOfWeek,
-  onFocusChange,
-  numberOfMonths: numberOfMonthsProps,
-  focusedInput,
-  onDatesChange,
+const { startDatePlaceholder, endDatePlaceholder } = dateRangeInputPhrases
+
+export const DateRangeInput = ({
+  dates = [null, null],
+  ids = ['startDate', 'endDate'],
+  names = ['startDate', 'endDate'],
+  placeholders = [startDatePlaceholder, endDatePlaceholder],
+  refs = [null, null],
+  icons = [CalendarIcon, CalendarIcon],
+  showCalendarIcons = [true, true],
+
+  focusedInput: focusedInputProp = null,
+  onClose: onCloseProp = () => {},
+  onDatesChange: onDatesChangeProp = () => {},
+  onFocusChange: onFocusChangeProp = () => {},
+
   exactMinBookingDays,
-  dayLabelFormat,
-  weekdayLabelFormat,
-  monthLabelFormat,
-  onDayRender,
+  firstDayOfWeek,
   initialVisibleMonth,
-  showClose = true,
-  showSelectedDates = true,
-  showResetDates = true,
-  vertical = false,
   isDateBlocked = () => false,
+  maxBookingDate,
+  minBookingDate,
   minBookingDays = 1,
-  onClose = () => {},
-  showStartDateCalendarIcon = true,
-  showEndDateCalendarIcon = true,
-  displayFormat = 'MM/dd/yyyy',
+  numberOfMonths: numberOfMonthsProps,
+  onDayRender,
+  overwriteDefaultStyles,
   phrases = dateRangeInputPhrases,
   placement = 'bottom',
-  startDateInputId = 'startDate',
-  endDateInputId = 'endDate',
+  showClose = true,
+  showResetDates = true,
+  showSelectedDates = true,
+  showDivider = false,
+
+  //
+  styles: customStyles,
   unavailableDates = [],
-  theme: customTheme = {},
-  size,
-  resetStyles = false,
-}: DateRangeInputProps) {
-  const ref = useRef(null)
+  vertical = false,
+  //
+  dayLabelFormat,
+  displayFormat = 'MM/dd/yyyy',
+  monthLabelFormat,
+  weekdayLabelFormat,
+}: DateRangeInputProps) => {
+  const datepickerRef = useRef(null)
   const datepickerWrapperRef = useRef<HTMLDivElement>(null)
+
+  const [startDate, setStartDate] = useState<InputDate>(dates[0])
+  const [endDate, setEndDate] = useState<InputDate>(dates[1])
+  const [focusedInput, setFocusedInput] = useState<FocusedInput>(focusedInputProp)
+
+  const styles = useStyles('dateRangeInputStyles', {
+    selectDatesContainer: { spacing: 5 },
+    selectDatesDivider: {},
+  })
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('click', onClickOutsideHandler)
     }
-
     return () => {
       window.removeEventListener('click', onClickOutsideHandler)
     }
   })
+
+  function onFocusChange(_focusedInput: FocusedInput) {
+    setFocusedInput(_focusedInput)
+    onFocusChangeProp(_focusedInput)
+  }
+
+  function onDatesChange(data: OnDatesChangeProps) {
+    setStartDate(data.startDate)
+    setEndDate(data.endDate)
+    setFocusedInput(data.focusedInput)
+    onDatesChangeProp(data)
+  }
 
   function onClickOutsideHandler(event: Event) {
     if (
@@ -102,60 +149,64 @@ export function DateRangeInput({
   }
 
   function handleDatepickerClose() {
-    onClose()
     onFocusChange(null)
+    onCloseProp()
   }
 
   function handleInputChange(date: Date) {
     // @ts-ignore
-    if (ref && ref.current && ref.current.onDateSelect) {
+    if (datepickerRef && datepickerRef.current && datepickerRef.current.onDateSelect) {
       // @ts-ignore
-      ref.current.onDateSelect(date)
+      datepickerRef.current.onDateSelect(date)
     }
   }
 
-  const stackStyleProps: StackProps = vertical ? {} : {}
-
-  const theme = resetStyles ? (customTheme as DatepickerTheme) : merge(datepickerTheme, customTheme)
+  const isMobile = vertical || useBreakpointValue({ base: true, md: false })
 
   return (
-    <DatepickerThemeProvider theme={theme}>
+    <StylesContextProvider
+      customStyles={customStyles}
+      overwriteDefaultStyles={overwriteDefaultStyles}
+    >
       <Box position="relative" ref={datepickerWrapperRef}>
-        <Stack isInline={!vertical} {...stackStyleProps} data-testid="DateRangeInputGrid">
+        <Stack
+          isInline={!isMobile}
+          {...styles.selectDatesContainer}
+          data-testid="DateRangeInputGrid"
+          divider={showDivider ? <StackDivider {...styles.selectDatesDivider} /> : undefined}
+        >
           <Input
+            iconComponent={icons[0]}
+            id={ids[0]}
+            name={names[0]}
+            placeholder={placeholders[0]}
+            ref={refs[0]}
+            showCalendarIcon={showCalendarIcons[0]}
             aria-label={phrases.startDateAriaLabel}
             dateFormat={displayFormat}
-            id={startDateInputId}
             isActive={focusedInput === START_DATE}
             onChange={handleInputChange}
             onClick={() => onFocusChange(START_DATE)}
-            placeholder={phrases.startDatePlaceholder}
-            showCalendarIcon={showStartDateCalendarIcon}
-            size={size}
             value={getInputValue(startDate, displayFormat, '')}
             vertical={vertical}
           />
-
-          <Flex alignContent="center" alignItems="center" justifyContent="center">
-            <ArrowForwardIcon transform={`rotate(${vertical ? 90 : 0}deg)`} />
-          </Flex>
-
           <Input
+            iconComponent={icons[1]}
+            id={ids[1]}
+            name={names[1]}
+            placeholder={placeholders[1]}
+            ref={refs[1]}
+            showCalendarIcon={showCalendarIcons[1]}
             aria-label={phrases.endDateAriaLabel}
             dateFormat={displayFormat}
             disableAccessibility={focusedInput === START_DATE}
-            id={endDateInputId}
             isActive={focusedInput === END_DATE}
             onChange={handleInputChange}
             onClick={() => onFocusChange(!startDate ? START_DATE : END_DATE)}
-            placeholder={phrases.endDatePlaceholder}
-            showCalendarIcon={showEndDateCalendarIcon}
-            size={size}
             value={getInputValue(endDate, displayFormat, '')}
             vertical={vertical}
           />
         </Stack>
-
         <Box position="absolute" top={placement === 'bottom' ? 65 : 0}>
           {focusedInput !== null && (
             <Datepicker
@@ -176,12 +227,12 @@ export function DateRangeInput({
               onDatesChange={onDatesChange}
               onDayRender={onDayRender}
               phrases={phrases}
-              ref={ref}
+              ref={datepickerRef}
               showClose={showClose}
               showResetDates={showResetDates}
               showSelectedDates={showSelectedDates}
               startDate={startDate}
-              theme={theme}
+              styles={customStyles}
               unavailableDates={unavailableDates}
               vertical={vertical}
               weekdayLabelFormat={weekdayLabelFormat}
@@ -189,6 +240,6 @@ export function DateRangeInput({
           )}
         </Box>
       </Box>
-    </DatepickerThemeProvider>
+    </StylesContextProvider>
   )
 }

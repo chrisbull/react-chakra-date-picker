@@ -1,33 +1,58 @@
 import { Stack, Text } from '@chakra-ui/react'
 import { getInputValue } from '@datepicker-react/hooks'
-import React from 'react'
-import merge from 'ts-deepmerge'
-import { useDatepickerContext } from '../hooks/useDatepickerContext'
-import { useThemeContext } from '../hooks/useThemeContext'
+import React, { useMemo } from 'react'
+import { useDatepickerContext } from '../context/DatepickerContext'
+import { useStyles } from '../context/StylesContext'
+import { InputDate } from '../types'
 
 export interface SelectedDateProps {
   isFocused: boolean
-  date: Date | null
+  date: InputDate
 }
 
 export const SelectedDate = ({ isFocused, date }: SelectedDateProps) => {
   const { phrases, displayFormat } = useDatepickerContext()
-  const theme = useThemeContext()
+  const styles = useStyles('selectDate', {
+    selectedDateContainer: {
+      width: '100%',
+      borderBottom: '2px solid',
+      borderBottomColor: 'transparent',
+    },
+    selectedDateContainerActive: {
+      borderBottomColor: 'blue.300',
+    },
+    selectedDateText: {
+      fontSize: 'xs',
+      color: 'gray.500',
+    },
+    selectedDateTextActive: {},
 
-  const containerProps = merge(
-    theme.selectedDateContainer,
-    isFocused ? theme.selectedDateContainerActive : {},
-  )
-  const textProps = merge(theme.selectedDateText, isFocused ? theme.selectedDateTextActive : {})
-  const dateTextProps = merge(
-    theme.selectedDateDateText,
-    isFocused ? theme.selectedDateDateTextActive : {},
+    selectedDateDateText: {
+      fontWeight: 'bold',
+    },
+    selectedDateDateTextActive: {},
+  })
+
+  const stateStyles = useMemo(
+    () =>
+      !isFocused
+        ? {
+            container: styles.selectedDateContainer,
+            text: styles.selectedDateText,
+            dateText: styles.selectedDateDateText,
+          }
+        : {
+            container: styles.selectedDateContainerActive,
+            text: styles.selectedDateTextActive,
+            dateText: styles.selectedDateDateTextActive,
+          },
+    [isFocused, styles],
   )
 
   return (
-    <Stack {...containerProps}>
-      <Text {...textProps}>{phrases.datepickerStartDateLabel}</Text>
-      <Text {...dateTextProps}>
+    <Stack {...stateStyles.container}>
+      <Text {...stateStyles.text}>{phrases.datepickerStartDateLabel}</Text>
+      <Text {...stateStyles.dateText}>
         {getInputValue(date, displayFormat, phrases.datepickerStartDatePlaceholder)}
       </Text>
     </Stack>

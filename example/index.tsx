@@ -3,8 +3,7 @@ import * as React from 'react'
 import { FC } from 'react'
 import 'react-app-polyfill/ie11'
 import * as ReactDOM from 'react-dom'
-import { DateRangeInputDemo } from './demo/DateRangeInputDemo'
-import { DateSingleInputDemo } from './demo/DateSingleInputDemo'
+import { HookForm } from './HookForm'
 
 const theme = extendTheme({
   components: {
@@ -43,31 +42,32 @@ const App = () => {
     <ChakraProvider theme={theme}>
       <Container mt={10}>
         <Heading>React Chakra-UI Date Picker</Heading>
+        <HookForm />
 
         <Stack>
-          <Card>
+          {/* <Card>
             <Subhead>Single Date Picker</Subhead>
-            <DateSingleInputDemo inputId="horizontal-startDate-single" />
-          </Card>
-          <Card>
+            <DateSingleInput />
+          </Card> */}
+          {/* <Card>
             <Subhead>Date Range Picker</Subhead>
             <DateRangeInputDemo
               startDateInputId="horizontal-startDate-range"
               endDateInputId="horizontal-endDate"
             />
-          </Card>
-          <Card>
+          </Card> */}
+          {/* <Card>
             <Subhead>Single Date Picker</Subhead>
             <DateSingleInputDemo inputId="vertical-startDate-single" vertical />
-          </Card>
-          <Card>
+          </Card> */}
+          {/* <Card>
             <Subhead>Date Range Picker</Subhead>
             <DateRangeInputDemo
               startDateInputId="vertical-startDate-range"
               endDateInputId="vertical-endDate"
               vertical
             />
-          </Card>
+          </Card> */}
         </Stack>
       </Container>
     </ChakraProvider>

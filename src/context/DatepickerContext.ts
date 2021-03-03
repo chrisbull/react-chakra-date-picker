@@ -1,6 +1,6 @@
 import { FocusedInput, FormatFunction } from '@datepicker-react/hooks'
-import React from 'react'
-import { DatepickerPhrases, datepickerPhrases } from './phrases'
+import React, { useContext } from 'react'
+import { DatepickerPhrases, datepickerPhrases } from '../phrases'
 
 export interface DatepickerContextProps {
   rtl: boolean
@@ -23,7 +23,7 @@ export interface DatepickerContextProps {
   numberOfMonths?: number
 }
 
-export const datepickerContextDefaultValue = {
+export const datepickerContextDefaultValue: DatepickerContextProps = {
   rtl: false,
   focusedDate: null,
   isDateFocused: () => false,
@@ -44,6 +44,6 @@ export const datepickerContextDefaultValue = {
   numberOfMonths: 2,
 }
 
-export const DatepickerContext = React.createContext(
-  datepickerContextDefaultValue as DatepickerContextProps,
-)
+export const DatepickerContext = React.createContext(datepickerContextDefaultValue)
+
+export const useDatepickerContext = () => useContext(DatepickerContext)

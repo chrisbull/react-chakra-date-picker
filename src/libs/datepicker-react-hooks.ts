@@ -1,4 +1,4 @@
-import {
+export type {
   END_DATE,
   FirstDayOfWeek,
   FocusedInput,
@@ -8,12 +8,4 @@ import {
   START_DATE,
 } from '@datepicker-react/hooks'
 
-export {
-  END_DATE,
-  FirstDayOfWeek,
-  FocusedInput,
-  FormatFunction,
-  MonthType,
-  OnDatesChangeProps,
-  START_DATE,
-}
+export { getInputValue } from '@datepicker-react/hooks'

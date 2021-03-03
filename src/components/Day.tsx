@@ -2,8 +2,87 @@ import { Box, Button, Flex } from '@chakra-ui/react'
 import { isEndDate, isStartDate, useDay } from '@datepicker-react/hooks'
 import React, { useRef } from 'react'
 import merge from 'ts-deepmerge'
-import { useDatepickerContext } from '../hooks/useDatepickerContext'
-import { useThemeContext } from '../hooks/useThemeContext'
+import { useDatepickerContext } from '../context/DatepickerContext'
+import { useStyles } from '../context/StylesContext'
+import { DayStyles } from '../types'
+
+const dayStyles: DayStyles = {
+  dayBase: {
+    height: ['32px', '48px'],
+    width: ['32px', '48px'],
+    pl: 0,
+    pr: 0,
+    minWidth: 'unset',
+    fontWeight: 'medium',
+    fontSize: ['sm', 'md'],
+    border: '2px solid',
+    borderRadius: '100%',
+    borderColor: 'transparent',
+    background: 'transparent',
+    _hover: {
+      borderColor: 'transparent',
+      background: 'transparent',
+    },
+  },
+  dayNormal: {
+    color: 'gray.900',
+    _hover: {
+      borderColor: 'black',
+    },
+  },
+  dayRangeHover: {
+    _hover: {
+      borderColor: 'black',
+    },
+  },
+  daySelected: {
+    _hover: {
+      borderColor: 'black',
+    },
+  },
+  daySelectedFirstOrLast: {
+    color: 'white',
+    background: 'black',
+    _hover: {
+      color: 'white',
+      background: 'black',
+    },
+  },
+  daySelectedFirst: {},
+  daySelectedLast: {},
+  dayBaseContainer: {
+    height: ['32px', '48px'],
+    width: ['32px', '48px'],
+    _hover: {
+      borderRightRadius: '100%',
+    },
+  },
+  dayNormalContainer: {},
+  dayRangeHoverContainer: {
+    background: 'gray.100',
+    _hover: {
+      borderRightRadius: '100%',
+    },
+  },
+  daySelectedContainer: {
+    background: 'gray.100',
+    _hover: {
+      borderRightRadius: '0%',
+    },
+  },
+  daySelectedFirstOrLastContainer: {
+    background: 'gray.100',
+  },
+  daySelectedFirstContainer: {
+    borderLeftRadius: '100%',
+  },
+  daySelectedLastContainer: {
+    borderRightRadius: '100%',
+    _hover: {
+      borderRightRadius: '100%',
+    },
+  },
+}
 
 function getColor(
   {
@@ -59,7 +138,7 @@ interface DayProps {
   date: Date
 }
 
-function Day({ day, date }: DayProps) {
+export function Day({ day, date }: DayProps) {
   const dayRef = useRef<HTMLButtonElement>(null)
 
   const {
@@ -102,7 +181,7 @@ function Day({ day, date }: DayProps) {
     disabledDate,
   } = dayProps
 
-  const theme = useThemeContext()
+  const styles = useStyles('day', dayStyles)
 
   const isFirst = isStartDate(date, startDate)
   const isLast = isEndDate(date, endDate)
@@ -117,13 +196,13 @@ function Day({ day, date }: DayProps) {
       disabledDate,
     },
     {
-      base: theme.dayBaseContainer,
-      normal: theme.dayNormalContainer,
-      rangeHover: theme.dayRangeHoverContainer,
-      selected: theme.daySelectedContainer,
-      first: theme.daySelectedFirstContainer,
-      last: theme.daySelectedLastContainer,
-      firstOrLast: theme.daySelectedFirstOrLastContainer,
+      base: styles.dayBaseContainer,
+      normal: styles.dayNormalContainer,
+      rangeHover: styles.dayRangeHoverContainer,
+      selected: styles.daySelectedContainer,
+      first: styles.daySelectedFirstContainer,
+      last: styles.daySelectedLastContainer,
+      firstOrLast: styles.daySelectedFirstOrLastContainer,
     },
   )
 
@@ -137,13 +216,13 @@ function Day({ day, date }: DayProps) {
       disabledDate,
     },
     {
-      base: theme.dayBase,
-      normal: theme.dayNormal,
-      rangeHover: theme.dayRangeHover,
-      selected: theme.daySelected,
-      first: theme.daySelectedFirst,
-      last: theme.daySelectedLast,
-      firstOrLast: theme.daySelectedFirstOrLast,
+      base: styles.dayBase,
+      normal: styles.dayNormal,
+      rangeHover: styles.dayRangeHover,
+      selected: styles.daySelected,
+      first: styles.daySelectedFirst,
+      last: styles.daySelectedLast,
+      firstOrLast: styles.daySelectedFirstOrLast,
     },
   )
 
@@ -173,5 +252,3 @@ function Day({ day, date }: DayProps) {
     </Box>
   )
 }
-
-export default Day

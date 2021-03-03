@@ -1,16 +1,20 @@
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { IconButton, IconButtonProps } from '@chakra-ui/react'
 import React from 'react'
-import { useThemeContext } from '../hooks/useThemeContext'
+import { useStyles } from '../context/StylesContext'
 
-export interface ActionButtonProps extends IconButtonProps {
+export interface ActionButtonProps extends Omit<IconButtonProps, 'aria-label'> {
   direction?: 'up' | 'right' | 'down' | 'left'
 }
 
 export const ActionButton: React.FC<ActionButtonProps> = ({ direction, ...props }) => {
-  const theme = useThemeContext()
-
   let IconComponent = ChevronLeftIcon
+
+  const styles = useStyles('actionButton', {
+    actionButton: {
+      position: 'relative',
+    },
+  })
 
   if (direction === 'up') {
     IconComponent = ChevronUpIcon
@@ -22,5 +26,12 @@ export const ActionButton: React.FC<ActionButtonProps> = ({ direction, ...props 
     IconComponent = ChevronLeftIcon
   }
 
-  return <IconButton icon={<IconComponent />} {...theme.actionButton} {...props} />
+  return (
+    <IconButton
+      aria-label={`Arrow ${direction}`}
+      icon={<IconComponent />}
+      {...styles.actionButton}
+      {...props}
+    />
+  )
 }

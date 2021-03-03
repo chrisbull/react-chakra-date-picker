@@ -1,17 +1,22 @@
+import { RepeatIcon } from '@chakra-ui/icons'
 import { Button } from '@chakra-ui/react'
 import React from 'react'
-import { RepeatIcon } from '@chakra-ui/icons'
-import { useThemeContext } from '../hooks/useThemeContext'
-import { useDatepickerContext } from '../hooks/useDatepickerContext'
+import { useDatepickerContext } from '../context/DatepickerContext'
+import { useStyles } from '../context/StylesContext'
 
 interface ResetDatesProps {
   onResetDates(): void
   text: string
 }
 
-export function ResetDates({ onResetDates, text }: ResetDatesProps) {
-  const theme = useThemeContext()
+export function ResetDatesButton({ onResetDates, text }: ResetDatesProps) {
   const { phrases } = useDatepickerContext()
+
+  const styles = useStyles('resetDatesButton', {
+    resetDatesButton: {
+      variant: 'ghost',
+    },
+  })
 
   function handleMouseUp(e: React.MouseEvent) {
     // @ts-ignore
@@ -23,7 +28,7 @@ export function ResetDates({ onResetDates, text }: ResetDatesProps) {
       icon={<RepeatIcon />}
       tabIndex={-1}
       aria-label={phrases.resetDates}
-      {...theme.resetDatesButton}
+      {...styles.resetDatesButton}
       onClick={onResetDates}
       onMouseUp={handleMouseUp}
     >

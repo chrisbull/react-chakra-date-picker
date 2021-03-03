@@ -1,5 +1,6 @@
 import { CalendarIcon } from '@chakra-ui/icons'
 import {
+  FormControl,
   Icon,
   Input as ChakraInput,
   InputGroup,
@@ -7,88 +8,113 @@ import {
   InputProps as ChakraInputProps,
 } from '@chakra-ui/react'
 import { FormatFunction, parseDate } from '@datepicker-react/hooks'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'
 import merge from 'ts-deepmerge'
-import { useThemeContext } from '../hooks/useThemeContext'
+import { useStyles } from '../context/StylesContext'
 
 export interface InputProps extends Omit<ChakraInputProps, 'onChange'> {
-  onClick(): void
+  id: string
+  name: string
   value: string
-
-  dateFormat?: string | FormatFunction
+  onChange(date: Date): void
+  onClick(): void
   disableAccessibility?: boolean
   iconComponent?: typeof CalendarIcon
-  id?: string
+  dateFormat?: string | FormatFunction
   isActive?: boolean
-  onChange?(date: Date): void
   showCalendarIcon?: boolean
   vertical?: boolean
 }
 
-export function Input({
-  dateFormat = 'MM/dd/yyyy',
-  disableAccessibility,
-  iconComponent = CalendarIcon,
-  id,
-  isActive,
-  onChange = () => {},
-  onClick,
-  showCalendarIcon,
-  value,
-}: InputProps) {
-  const [searchString, setSearchString] = useState(value)
+export const Input = forwardRef(
+  (
+    {
+      id,
+      name,
+      value,
+      onChange,
+      onClick,
+      vertical,
+      showCalendarIcon = true,
+      isActive = false,
+      dateFormat = 'MM/dd/yyyy',
+      disableAccessibility = false,
+      iconComponent = CalendarIcon,
 
-  const theme = useThemeContext()
+      ...inputProps // placeholder, aria, etc
+    }: InputProps,
+    ref: Ref<HTMLInputElement>,
+  ) => {
+    const timeoutRef = useRef<any>(null)
 
-  const ref = useRef<unknown>(null)
+    const [searchString, setSearchString] = useState(value)
 
-  useEffect(() => {
-    setSearchString(value)
-  }, [value])
+    const stateStyles = useStyles('inputComponent', {
+      default: {
+        container: {},
+        input: {},
+        icon: {},
+        inputAddon: {},
+      },
+      active: {
+        container: {},
+        input: {},
+        icon: {},
+        inputAddon: {},
+      },
+    })
 
-  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const dateValue = e.target.value
-    setSearchString(dateValue)
+    const styles = merge(stateStyles.default, isActive ? stateStyles.active : {})
 
-    if (typeof ref.current === 'number') {
-      clearTimeout(ref.current)
-    }
+    useEffect(() => {
+      setSearchString(value)
+    }, [value])
 
-    ref.current = setTimeout(() => {
-      onClick()
-      let _dateFormat =
-        typeof dateFormat === 'function' ? dateFormat(new Date(dateValue)) : dateFormat
-      const parsedDate = parseDate(dateValue, _dateFormat, new Date())
+    return (
+      <FormControl>
+        <InputGroup {...styles.container} htmlFor={id}>
+          {showCalendarIcon && (
+            <InputLeftAddon {...styles.inputAddon}>
+              <Icon as={iconComponent} {...styles.icon} />
+            </InputLeftAddon>
+          )}
+          <ChakraInput
+            {...styles.input}
+            {...inputProps}
+            ref={ref}
+            id={id}
+            name={name}
+            tabIndex={disableAccessibility ? -1 : 0}
+            value={searchString}
+            onFocus={onClick}
+            autoComplete="off"
+            data-testid="DatepickerInput"
+            onChange={e => {
+              const dateValue = e.target.value
 
-      // @ts-ignore
-      if (!isNaN(parsedDate)) {
-        onChange(parsedDate)
-      }
-    }, 1000)
-  }
+              console.log('dateValue', dateValue)
 
-  const containerProps = merge(theme.inputContainer, isActive ? theme.inputContainerActive : {})
-  const inputProps = merge(theme.input, isActive ? theme.inputActive : {})
-  const leftAddonProps = merge(theme.inputLeftAddon, isActive ? theme.inputLeftAddonActive : {})
-  const iconProps = merge(theme.inputIcon, isActive ? theme.inputIconActive : {})
+              setSearchString(dateValue)
 
-  return (
-    <InputGroup {...containerProps} htmlFor={id}>
-      {showCalendarIcon && (
-        <InputLeftAddon {...leftAddonProps}>
-          <Icon as={iconComponent} {...iconProps} />
-        </InputLeftAddon>
-      )}
-      <ChakraInput
-        {...inputProps}
-        tabIndex={disableAccessibility ? -1 : 0}
-        id={id}
-        value={searchString}
-        autoComplete="off"
-        onChange={handleOnChange}
-        onFocus={onClick}
-        data-testid="DatepickerInput"
-      />
-    </InputGroup>
-  )
-}
+              if (typeof timeoutRef.current === 'number') {
+                clearTimeout(timeoutRef.current)
+              }
+
+              timeoutRef.current = setTimeout(() => {
+                onClick()
+                let _dateFormat =
+                  typeof dateFormat === 'function' ? dateFormat(new Date(dateValue)) : dateFormat
+                const parsedDate = parseDate(dateValue, _dateFormat, new Date())
+
+                // @ts-ignore
+                if (!isNaN(parsedDate)) {
+                  onChange(parsedDate)
+                }
+              }, 1000)
+            }}
+          />
+        </InputGroup>
+      </FormControl>
+    )
+  },
+)

@@ -1,8 +1,8 @@
 import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import { CalendarDay, FirstDayOfWeek, useMonth } from '@datepicker-react/hooks'
 import React from 'react'
-import { useThemeContext } from '../hooks/useThemeContext'
-import Day from './Day'
+import { useStyles } from '../context/StylesContext'
+import { Day } from './Day'
 
 export interface MonthProps {
   year: number
@@ -30,27 +30,45 @@ export const Month = ({
     firstDayOfWeek,
   })
 
-  const theme = useThemeContext()
+  const styles = useStyles('month', {
+    monthContainer: {},
+    monthMonthLabel: {
+      justifyContent: 'center',
+      fontWeight: 'bold',
+      mb: 6,
+      fontSize: ['md', 'lg'],
+    },
+    monthWeekdayLabel: {
+      justifyContent: 'center',
+      color: 'gray.500',
+      mb: 4,
+      fontSize: ['sm', 'md'],
+    },
+    monthDayGrid: {
+      rowGap: 1,
+    },
+  })
 
   return (
-    <Box {...theme.monthContainer}>
-      <Flex {...theme.monthMonthLabel}>
+    <Box {...styles.monthContainer}>
+      <Flex {...styles.monthMonthLabel}>
         <Text>{monthLabel}</Text>
       </Flex>
       <SimpleGrid columns={7}>
         {weekdayLabels.map((weekdayLabel: string) => (
-          <Flex key={weekdayLabel} {...theme.monthWeekdayLabel}>
+          <Flex key={weekdayLabel} {...styles.monthWeekdayLabel}>
             <Text>{weekdayLabel}</Text>
           </Flex>
         ))}
       </SimpleGrid>
-      <SimpleGrid {...theme.monthDayGrid} columns={7}>
-        {days.map((day: CalendarDay, index: number) => {
-          if (typeof day === 'object') {
-            return <Day date={day.date} key={`${day.dayLabel}-${index}`} day={day.dayLabel} />
-          }
-          return <div key={index} />
-        })}
+      <SimpleGrid {...styles.monthDayGrid} columns={7}>
+        {days.map((day: CalendarDay, index: number) =>
+          typeof day === 'object' ? (
+            <Day date={day.date} key={`${day.dayLabel}-${index}`} day={day.dayLabel} />
+          ) : (
+            <div key={index} />
+          ),
+        )}
       </SimpleGrid>
     </Box>
   )

@@ -1,6 +1,38 @@
 import React, { createContext, FC, useContext } from 'react'
 import merge from 'ts-deepmerge'
-import { DatepickerStyles, StylesContextProps, StylesProviderProps } from '../types'
+import {
+  ActionButtonStyles,
+  CloseButtonStyles,
+  DatepickerComponentStyles,
+  DateRangeInputStyles,
+  DayStyles,
+  InputComponentStyles,
+  MonthStyles,
+  ResetDatesButtonStyles,
+  SelectDateStyles,
+} from '../types'
+
+export interface DatepickerStyles {
+  actionButton: ActionButtonStyles
+  closeButton: CloseButtonStyles
+  datepickerComponent: DatepickerComponentStyles
+  day: DayStyles
+  inputComponent: InputComponentStyles
+  month: MonthStyles
+  resetDatesButton: ResetDatesButtonStyles
+  selectDate: SelectDateStyles
+  dateRangeInputStyles: DateRangeInputStyles
+}
+
+export interface StylesContextProps {
+  overwriteDefaultStyles: boolean
+  styles: DatepickerStyles
+}
+
+export interface StylesProviderProps {
+  overwriteDefaultStyles?: boolean
+  styles?: Partial<DatepickerStyles>
+}
 
 export const emptyStylesObject: DatepickerStyles = {
   actionButton: {},

@@ -1,21 +1,45 @@
+import { FocusedInput, FormatFunction, useDatepicker } from '@datepicker-react/hooks'
 import React, { useContext } from 'react'
-import { datepickerPhrases } from '../phrases'
+import { datepickerPhrases, DatepickerPhrases } from '../phrases'
+import { InputDate } from '../types'
 import {
-  DatepickerContextBaseProps,
-  DatepickerContextProps,
-  DatepickerFormatProps,
-  DatepickerProviderProps,
-  UseDatepickerReturnType,
-} from '../types'
-import { monthLabelFormatFn, weekdayLabelFormatFn, dayLabelFormatFn } from '../utils/formatters'
+  dayLabelFormatFn,
+  defaultDisplayFormat,
+  monthLabelFormatFn,
+  weekdayLabelFormatFn,
+} from '../utils/formatters'
+
+export type UseDatepickerReturnType = ReturnType<typeof useDatepicker>
+
+export interface DatepickerFormatProps {
+  dayLabelFormat: typeof dayLabelFormatFn
+  weekdayLabelFormat: typeof weekdayLabelFormatFn
+  monthLabelFormat: typeof monthLabelFormatFn
+}
+
+export interface DatepickerContextBaseProps {
+  displayFormat: FormatFunction | string
+  startDate: InputDate
+  endDate: InputDate
+  phrases: DatepickerPhrases
+  focusedInput: FocusedInput
+  onDayRender?(date: Date): React.ReactNode
+}
+
+export interface DatepickerContextProps
+  extends DatepickerContextBaseProps,
+    DatepickerFormatProps,
+    UseDatepickerReturnType {}
+
+export interface DatepickerProviderProps extends Partial<DatepickerContextProps> {}
 
 const defaultBase: DatepickerContextBaseProps = {
-  displayFormat: 'MM/dd/yyyy',
+  startDate: null,
   endDate: null,
   focusedInput: null,
   onDayRender: undefined,
+  displayFormat: defaultDisplayFormat,
   phrases: datepickerPhrases,
-  startDate: null,
 }
 
 const defaultFormatters: DatepickerFormatProps = {

@@ -3,9 +3,9 @@ import { getInputValue, OnDatesChangeProps, START_DATE } from '@datepicker-react
 import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'
 import { StylesProvider } from '../context/StylesContext'
 import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases'
-import { DatepickerProps, InputDate, StylesProviderProps } from '../types'
+import { InputDate } from '../types'
 import { defaultDisplayFormat } from '../utils/formatters'
-import { Datepicker, DatepickerElement } from './Datepicker'
+import { Datepicker, DatepickerElement, DatepickerProps } from './Datepicker'
 import { Input, InputProps } from './Input'
 
 export interface OnDateChangeProps {
@@ -13,30 +13,20 @@ export interface OnDateChangeProps {
   showDatepicker: boolean
 }
 
-export interface DateSingleInputProps
-  extends Omit<InputProps, 'disableAccessibility'>,
-    StylesProviderProps,
-    Omit<
-      DatepickerProps,
-      | 'phrases'
-      | 'onDatesChange'
-      | 'showResetDates'
-      | 'showSelectedDates'
-      | 'focusedInput'
-      | 'minBookingDays'
-      | 'exactMinBookingDays'
-    > {
+export interface DateSingleInputProps extends Partial<InputProps>, Partial<DatepickerProps> {
   onFocusChange?(focusInput: boolean): void
   phrases?: DateSingleInputPhrases
   placement?: 'top' | 'bottom'
   showDatepicker?: boolean
-  defaultDate?: InputDate
+  date?: InputDate
   showResetDate?: boolean
 }
 
 export const DateSingleInput = forwardRef(
-  (props: DateSingleInputProps, ref: Ref<HTMLInputElement>) => {
-    const {
+  (
+    {
+      date: dateProp = null,
+      showDatepicker: showDatepickerProp = false,
       changeActiveMonthOnSelect,
       dayLabelFormat,
       displayFormat = defaultDisplayFormat,
@@ -67,22 +57,23 @@ export const DateSingleInput = forwardRef(
       value,
       vertical = false,
       weekdayLabelFormat,
-    } = props
-
+      allowEditableInputs = false,
+    }: DateSingleInputProps,
+    ref: Ref<HTMLInputElement>,
+  ) => {
     const datepickerRef = useRef<DatepickerElement>(null)
     const datepickerWrapperRef = useRef<HTMLDivElement>(null)
 
-    const defaultDate: InputDate = value ? new Date(value) : props.defaultDate || null
-    const [date, setDate] = useState<InputDate>(defaultDate)
-    const [showDatepicker, setShowDatepicker] = useState(props.showDatepicker || false)
+    const [date, setDate] = useState<InputDate>(value ? new Date(value) : dateProp)
+    const [showDatepicker, setShowDatepicker] = useState(showDatepickerProp)
 
     useEffect(() => {
       onChange(date)
-    }, [date, onChange])
+    }, [date])
 
     useEffect(() => {
       onFocusChange(showDatepicker)
-    }, [showDatepicker, onFocusChange])
+    }, [showDatepicker])
 
     useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -129,9 +120,9 @@ export const DateSingleInput = forwardRef(
       <StylesProvider styles={styles} overwriteDefaultStyles={overwriteDefaultStyles}>
         <Box position="relative" ref={datepickerWrapperRef}>
           <Input
+            ref={ref}
             id={id}
             name={name}
-            ref={ref}
             aria-label={phrases.dateAriaLabel}
             value={getInputValue(date, displayFormat, '')}
             placeholder={placeholder || phrases.datePlaceholder}
@@ -145,6 +136,7 @@ export const DateSingleInput = forwardRef(
             }}
             disableAccessibility={false}
             iconComponent={iconComponent}
+            allowEditableInputs={allowEditableInputs}
           />
 
           <Box

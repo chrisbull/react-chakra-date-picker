@@ -21,7 +21,7 @@ export interface CloseButtonStyles {
 }
 
 export interface DatepickerComponentStyles {
-  container?: BoxProps
+  datepickerContainer?: BoxProps
   monthsWrapper?: StackProps
   buttonsWrapper?: BoxProps
   arrowIcon?: Omit<IconProps, 'css'>

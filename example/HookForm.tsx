@@ -13,8 +13,7 @@ import * as React from 'react'
 import 'react-app-polyfill/ie11'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import { DateRangeInput } from '../src/components/DateRangeInput'
-import { DateSingleInput } from '../src/components/DateSingleInput'
+import { DateRangeInput, DateSingleInput } from '../.'
 
 const schema = yup.object().shape({
   someDate: yup.date().required(),

@@ -18,8 +18,7 @@ export function ResetDatesButton({ onResetDates, text }: ResetDatesProps) {
     },
   })
 
-  function handleMouseUp(e: React.MouseEvent) {
-    // @ts-ignore
+  function handleMouseUp(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.currentTarget.blur()
   }
 

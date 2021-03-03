@@ -1,2 +1,2 @@
 export * from './styles'
-export * from './base'
+export * from './utils'

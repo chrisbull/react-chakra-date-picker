@@ -8,17 +8,19 @@ import {
   START_DATE,
 } from '@datepicker-react/hooks'
 import React, { Ref, useEffect, useRef, useState } from 'react'
-import { StylesProvider, useStyles } from '../context/StylesContext'
+import { StylesProvider, StylesProviderProps, useStyles } from '../context/StylesContext'
 import { dateRangeInputPhrases, DateRangeInputPhrases } from '../phrases'
-import { DatepickerProps, InputDate, StylesProviderProps } from '../types'
+import { InputDate } from '../types'
 import { defaultDisplayFormat } from '../utils/formatters'
-import { Datepicker, DatepickerElement } from './Datepicker'
-import { Input } from './Input'
+import { Datepicker, DatepickerElement, DatepickerProps } from './Datepicker'
+import { Input, InputProps } from './Input'
 
-export interface DateRangeInputProps extends StylesProviderProps, Partial<DatepickerProps> {
+export interface DateRangeInputProps
+  extends Partial<StylesProviderProps>,
+    Partial<DatepickerProps> {
+  startDateInputProps: Partial<InputProps>
+  endDateInputProps: Partial<InputProps>
   phrases?: DateRangeInputPhrases
-  defaultStartDate?: InputDate
-  defaultEndDate?: InputDate
   showDivider?: boolean
   placement?: 'top' | 'bottom'
   onFocusChange?(focusedInput: FocusedInput): void
@@ -34,10 +36,14 @@ export interface DateRangeInputProps extends StylesProviderProps, Partial<Datepi
   startPlaceholder?: string
   startRef?: Ref<HTMLInputElement>
   startShowCalendarIcon?: boolean
+  allowEditableInputs?: boolean
 }
 
 export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
   const {
+    endDate: endDateProp = null,
+    startDate: startDateProp = null,
+    focusedInput: focusedInputProp = null,
     displayFormat = defaultDisplayFormat,
     endShowCalendarIcon = true,
     isDateBlocked = () => false,
@@ -53,10 +59,6 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
     onClose = () => {},
     onDatesChange = () => {},
     onFocusChange = () => {},
-
-    focusedInput: focusedInputProp = null,
-    defaultStartDate = null,
-    defaultEndDate = null,
     styles: customStyles,
     overwriteDefaultStyles,
     startIcon,
@@ -81,14 +83,20 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
     onDayRender,
     unavailableDates,
     weekdayLabelFormat,
+    allowEditableInputs,
   } = props
 
   const datepickerRef = useRef<DatepickerElement>(null)
   const datepickerWrapperRef = useRef<HTMLDivElement>(null)
 
-  const [startDate, setStartDate] = useState<InputDate>(defaultStartDate)
-  const [endDate, setEndDate] = useState<InputDate>(defaultEndDate)
+  const [startDate, setStartDate] = useState<InputDate>(startDateProp)
+  const [endDate, setEndDate] = useState<InputDate>(endDateProp)
   const [focusedInput, setFocusedInput] = useState<FocusedInput>(focusedInputProp)
+
+  useEffect(() => {
+    setStartDate(startDateProp)
+    setEndDate(endDateProp)
+  }, [startDateProp, endDateProp])
 
   const styles = useStyles('dateRangeInputStyles', {
     selectDatesContainer: { spacing: 5 },
@@ -164,6 +172,7 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
             onChange={handleInputChange}
             onClick={() => handleOnFocusChange(START_DATE)}
             value={getInputValue(startDate, displayFormat, '')}
+            allowEditableInputs={allowEditableInputs}
           />
           <Input
             id={endId || 'endDate'}
@@ -179,6 +188,7 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
             onChange={handleInputChange}
             onClick={() => handleOnFocusChange(!startDate ? START_DATE : END_DATE)}
             value={getInputValue(endDate, displayFormat, '')}
+            allowEditableInputs={allowEditableInputs}
           />
         </Stack>
         <Box
@@ -194,7 +204,6 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
               focusedInput={focusedInput}
               onClose={handleOnClose}
               onDatesChange={handleOnDatesChange}
-              //
               changeActiveMonthOnSelect={changeActiveMonthOnSelect}
               dayLabelFormat={dayLabelFormat}
               exactMinBookingDays={exactMinBookingDays}

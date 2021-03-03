@@ -30,8 +30,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({ direction, ...props 
     <IconButton
       aria-label={`Arrow ${direction}`}
       icon={<IconComponent />}
-      {...styles.actionButton}
       {...props}
+      {...styles.actionButton}
     />
   )
 }

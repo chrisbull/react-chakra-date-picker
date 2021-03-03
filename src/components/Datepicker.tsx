@@ -1,11 +1,16 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
 import { Box, Flex, HStack, Stack, useBreakpointValue } from '@chakra-ui/react'
-import { END_DATE, MonthType, START_DATE, useDatepicker } from '@datepicker-react/hooks'
+import {
+  END_DATE,
+  MonthType,
+  START_DATE,
+  useDatepicker,
+  UseDatepickerProps,
+} from '@datepicker-react/hooks'
 import React, { Ref, useImperativeHandle, useRef } from 'react'
-import { DatepickerProvider } from '../context/DatepickerContext'
-import { StylesProvider, useStyles } from '../context/StylesContext'
-import { datepickerPhrases } from '../phrases'
-import { DatepickerProps } from '../types'
+import { DatepickerFormatProps, DatepickerProvider } from '../context/DatepickerContext'
+import { StylesProvider, StylesProviderProps, useStyles } from '../context/StylesContext'
+import { DatepickerPhrases, datepickerPhrases } from '../phrases'
 import {
   dayLabelFormatFn,
   defaultDisplayFormat,
@@ -22,10 +27,25 @@ export interface DatepickerElement {
   onDateSelect?(date: Date): void
 }
 
+export interface DatepickerProps
+  extends Partial<StylesProviderProps>,
+    Partial<DatepickerFormatProps>,
+    Partial<UseDatepickerProps> {
+  displayFormat?: string
+  onClose?(): void
+  onDayRender?(date: Date): React.ReactNode
+  phrases?: DatepickerPhrases
+  showClose?: boolean
+  showResetDates?: boolean
+  showSelectedDates?: boolean
+  vertical?: boolean
+}
+
 export const Datepicker = React.forwardRef(
   (props: DatepickerProps, ref: Ref<DatepickerElement>) => {
     const {
       changeActiveMonthOnSelect,
+      dayLabelFormat,
       displayFormat = defaultDisplayFormat,
       endDate = null,
       exactMinBookingDays = false,
@@ -36,71 +56,45 @@ export const Datepicker = React.forwardRef(
       maxBookingDate,
       minBookingDate,
       minBookingDays = 1,
+      monthLabelFormat,
       numberOfMonths = 2,
       onClose = () => {},
       onDatesChange = () => {},
+      onDayRender,
+      overwriteDefaultStyles,
       phrases = datepickerPhrases,
       showClose = true,
       showResetDates = true,
       showSelectedDates = true,
       startDate = null,
+      styles: customStyles,
       unavailableDates = [],
       vertical = false,
-      onDayRender,
-      overwriteDefaultStyles,
-      styles: customStyles,
-      dayLabelFormat,
-      monthLabelFormat,
       weekdayLabelFormat,
     } = props
+
+    const dp = useDatepicker({
+      changeActiveMonthOnSelect,
+      endDate,
+      exactMinBookingDays,
+      firstDayOfWeek,
+      focusedInput,
+      initialVisibleMonth,
+      isDateBlocked,
+      maxBookingDate,
+      minBookingDate,
+      minBookingDays,
+      numberOfMonths,
+      onDatesChange,
+      startDate,
+      unavailableDates,
+    })
 
     useImperativeHandle(ref, () => ({
       onDateSelect: (date: Date) => {
         dp.onDateSelect(date)
       },
     }))
-
-    const styles = useStyles('datepickerComponent', {
-      container: {
-        background: 'white',
-        borderRadius: 'sm',
-        position: 'relative',
-        width: 'fit-content',
-        boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px',
-        p: 5,
-        pt: 10,
-        zIndex: 1,
-      },
-      monthsWrapper: {
-        spacing: 8,
-      },
-      buttonsWrapper: {
-        alignItems: 'center',
-        pt: 5,
-      },
-      arrowIcon: {
-        marginLeft: 15,
-        marginRight: 15,
-        color: 'gray.500',
-      },
-    })
-
-    const dp = useDatepicker({
-      startDate,
-      endDate,
-      focusedInput,
-      firstDayOfWeek,
-      initialVisibleMonth,
-      maxBookingDate,
-      minBookingDate,
-      numberOfMonths,
-      changeActiveMonthOnSelect,
-      onDatesChange,
-      exactMinBookingDays,
-      isDateBlocked,
-      minBookingDays,
-      unavailableDates,
-    })
 
     const monthGridRef = useRef<HTMLDivElement>(null)
 
@@ -124,43 +118,67 @@ export const Datepicker = React.forwardRef(
 
     const _vertical = vertical || isMobile
 
+    const styles = useStyles('datepickerComponent', {
+      datepickerContainer: {
+        background: 'white',
+        borderRadius: 'sm',
+        position: 'relative',
+        width: 'fit-content',
+        boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px',
+        p: [3, 5],
+        zIndex: 1,
+      },
+      monthsWrapper: {
+        spacing: 8,
+      },
+      buttonsWrapper: {
+        alignItems: 'center',
+        pt: 5,
+      },
+      arrowIcon: {
+        marginLeft: 15,
+        marginRight: 15,
+        color: 'gray.500',
+      },
+    })
+
     return (
       <StylesProvider styles={customStyles} overwriteDefaultStyles={overwriteDefaultStyles}>
         <DatepickerProvider
-          firstDayOfWeek={dp.firstDayOfWeek}
           activeMonths={dp.activeMonths}
-          isDateSelected={dp.isDateSelected}
-          isDateHovered={dp.isDateHovered}
-          isFirstOrLastSelectedDate={dp.isFirstOrLastSelectedDate}
-          isStartDate={dp.isStartDate}
-          isEndDate={dp.isEndDate}
-          isDateBlocked={dp.isDateBlocked}
-          numberOfMonths={dp.numberOfMonths}
-          isDateFocused={dp.isDateFocused}
-          focusedDate={dp.focusedDate}
-          hoveredDate={dp.hoveredDate}
-          onResetDates={dp.onResetDates}
-          onDateHover={dp.onDateHover}
-          onDateSelect={dp.onDateSelect}
-          onDateFocus={dp.onDateFocus}
-          goToPreviousMonthsByOneMonth={dp.goToPreviousMonthsByOneMonth}
-          goToNextMonthsByOneMonth={dp.goToNextMonthsByOneMonth}
-          goToDate={dp.goToDate}
-          goToPreviousYear={dp.goToPreviousYear}
-          goToNextYear={dp.goToNextYear}
+          dayLabelFormat={dayLabelFormat || dayLabelFormatFn}
           displayFormat={displayFormat}
           endDate={endDate}
+          firstDayOfWeek={dp.firstDayOfWeek}
+          focusedDate={dp.focusedDate}
           focusedInput={focusedInput}
+          goToDate={dp.goToDate}
+          goToNextMonths={_goToNextMonths}
+          goToNextMonthsByOneMonth={dp.goToNextMonthsByOneMonth}
+          goToNextYear={dp.goToNextYear}
+          goToPreviousMonths={_goToPreviousMonths}
+          goToPreviousMonthsByOneMonth={dp.goToPreviousMonthsByOneMonth}
+          goToPreviousYear={dp.goToPreviousYear}
+          hoveredDate={dp.hoveredDate}
+          isDateBlocked={dp.isDateBlocked}
+          isDateFocused={dp.isDateFocused}
+          isDateHovered={dp.isDateHovered}
+          isDateSelected={dp.isDateSelected}
+          isEndDate={dp.isEndDate}
+          isFirstOrLastSelectedDate={dp.isFirstOrLastSelectedDate}
+          isStartDate={dp.isStartDate}
+          monthLabelFormat={monthLabelFormat || monthLabelFormatFn}
+          numberOfMonths={dp.numberOfMonths}
+          onDateFocus={dp.onDateFocus}
+          onDateHover={dp.onDateHover}
+          onDateSelect={dp.onDateSelect}
+          onDayRender={onDayRender}
+          onResetDates={dp.onResetDates}
           phrases={phrases}
           startDate={startDate}
-          onDayRender={onDayRender}
-          dayLabelFormat={dayLabelFormat || dayLabelFormatFn}
-          monthLabelFormat={monthLabelFormat || monthLabelFormatFn}
           weekdayLabelFormat={weekdayLabelFormat || weekdayLabelFormatFn}
-          goToNextMonths={_goToNextMonths}
-          goToPreviousMonths={_goToPreviousMonths}
         >
-          <Box {...styles.container}>
+          <Box {...styles.datepickerContainer}>
             {showClose && <CloseButton onClick={onClose} />}
 
             {showSelectedDates && (

@@ -1,7 +1,7 @@
+import 'react-app-polyfill/ie11'
 import { ChakraProvider, Container, extendTheme, Heading, Stack } from '@chakra-ui/react'
 import * as React from 'react'
 import { FC } from 'react'
-import 'react-app-polyfill/ie11'
 import * as ReactDOM from 'react-dom'
 import { HookForm } from './HookForm'
 

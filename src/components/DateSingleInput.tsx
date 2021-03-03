@@ -1,111 +1,88 @@
 import { Box } from '@chakra-ui/react'
-import {
-  FirstDayOfWeek,
-  FormatFunction,
-  getInputValue,
-  OnDatesChangeProps,
-  START_DATE,
-} from '@datepicker-react/hooks'
+import { getInputValue, OnDatesChangeProps, START_DATE } from '@datepicker-react/hooks'
 import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'
-import { DatepickerStyles, StylesContextProvider } from '../context/StylesContext'
+import { StylesProvider } from '../context/StylesContext'
 import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases'
-import { InputDate } from '../types'
-import { Datepicker } from './Datepicker'
-import { Input } from './Input'
+import { DatepickerProps, InputDate, StylesProviderProps } from '../types'
+import { defaultDisplayFormat } from '../utils/formatters'
+import { Datepicker, DatepickerElement } from './Datepicker'
+import { Input, InputProps } from './Input'
 
 export interface OnDateChangeProps {
   date: InputDate
   showDatepicker: boolean
 }
 
-export interface DateSingleInputProps {
-  id?: string
-  name?: string
-  value?: InputDate
-  onDateChange?(date: InputDate): void
+export interface DateSingleInputProps
+  extends Omit<InputProps, 'disableAccessibility'>,
+    StylesProviderProps,
+    Omit<
+      DatepickerProps,
+      | 'phrases'
+      | 'onDatesChange'
+      | 'showResetDates'
+      | 'showSelectedDates'
+      | 'focusedInput'
+      | 'minBookingDays'
+      | 'exactMinBookingDays'
+    > {
   onFocusChange?(focusInput: boolean): void
-  onClick?(): void
-  placement?: 'top' | 'bottom'
-  showCalendarIcon?: boolean
-  showResetDate?: boolean
-  showDatepicker?: boolean
   phrases?: DateSingleInputPhrases
-  placeholder?: string
-
-  // DatepickerProps
-  displayFormat?: string | FormatFunction
-  onClose?(): void
-  onDayRender?(date: Date): React.ReactNode
-  showClose?: boolean
-  showSelectedDates?: boolean
-  vertical?: boolean
-  overwriteDefaultStyles?: boolean
-  styles?: Partial<DatepickerStyles>
-  dayLabelFormat?(date: Date): string
-  monthLabelFormat?(date: Date): string
-  weekdayLabelFormat?(date: Date): string
-  minBookingDate?: Date
-  maxBookingDate?: Date
-  numberOfMonths?: number
-  firstDayOfWeek?: FirstDayOfWeek
-  initialVisibleMonth?: Date
-  isDateBlocked?(date: Date): boolean
-  unavailableDates?: Date[]
-  changeActiveMonthOnSelect?: boolean
+  placement?: 'top' | 'bottom'
+  showDatepicker?: boolean
+  defaultDate?: InputDate
+  showResetDate?: boolean
 }
 
 export const DateSingleInput = forwardRef(
-  (
-    {
-      id = 'startDate',
-      name = 'startDate',
-      value,
-      placeholder,
-      onDateChange: onDateChangeProp = () => {},
-      onFocusChange: onFocusChangeProp = () => {},
-      showDatepicker: showDatepickerProp = false,
-      onClick: onClickProp = () => {},
-      onClose: onCloseProp = () => {},
-
-      //
-      displayFormat = 'MM/dd/yyyy',
+  (props: DateSingleInputProps, ref: Ref<HTMLInputElement>) => {
+    const {
+      changeActiveMonthOnSelect,
+      dayLabelFormat,
+      displayFormat = defaultDisplayFormat,
       firstDayOfWeek,
+      iconComponent,
+      id = 'startDate',
       initialVisibleMonth,
       isDateBlocked = () => false,
       maxBookingDate,
       minBookingDate,
-      numberOfMonths = 1,
-      onDayRender,
-      phrases = dateSingleInputPhrases,
-      placement = 'bottom',
-      overwriteDefaultStyles = false,
-      showClose = true,
-      styles: customStyles,
-      unavailableDates = [],
-      showCalendarIcon = true,
-      showResetDate = true,
-      vertical = false,
-      //
       monthLabelFormat,
-      dayLabelFormat,
+      name = 'startDate',
+      numberOfMonths = 1,
+      onChange = () => {},
+      onClick = () => {},
+      onClose = () => {},
+      onDayRender,
+      onFocusChange = () => {},
+      overwriteDefaultStyles,
+      phrases = dateSingleInputPhrases,
+      placeholder,
+      placement = 'bottom',
+      showCalendarIcon = true,
+      showClose = true,
+      showResetDate = true,
+      styles,
+      unavailableDates = [],
+      value,
+      vertical = false,
       weekdayLabelFormat,
-    }: //
-    DateSingleInputProps,
-    ref: Ref<HTMLInputElement>,
-  ) => {
-    const datepickerRef = useRef<any>(null)
+    } = props
+
+    const datepickerRef = useRef<DatepickerElement>(null)
     const datepickerWrapperRef = useRef<HTMLDivElement>(null)
 
-    const [date, setDate] = useState<InputDate>(value || null)
-    const [showDatepicker, setShowDatepicker] = useState(showDatepickerProp)
+    const defaultDate: InputDate = value ? new Date(value) : props.defaultDate || null
+    const [date, setDate] = useState<InputDate>(defaultDate)
+    const [showDatepicker, setShowDatepicker] = useState(props.showDatepicker || false)
 
     useEffect(() => {
-      onDateChangeProp(date)
-    }, [date, onDateChangeProp])
+      onChange(date)
+    }, [date, onChange])
 
     useEffect(() => {
-      onFocusChangeProp(showDatepicker)
-    }, [showDatepicker, onFocusChangeProp])
+      onFocusChange(showDatepicker)
+    }, [showDatepicker, onFocusChange])
 
     useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -116,7 +93,7 @@ export const DateSingleInput = forwardRef(
       }
     })
 
-    function onFocusChange(show: boolean) {
+    function handleOnFocusChange(show: boolean) {
       setShowDatepicker(show)
     }
 
@@ -128,33 +105,28 @@ export const DateSingleInput = forwardRef(
         // @ts-ignore
         !datepickerWrapperRef.current.contains(event.target)
       ) {
-        onFocusChange(false)
+        handleOnFocusChange(false)
       }
     }
 
     function handleDatepickerClose() {
-      onFocusChange(false)
-      onCloseProp()
+      handleOnFocusChange(false)
+      onClose()
     }
 
-    function onDatesChange(data: OnDatesChangeProps) {
-      onFocusChange(data.focusedInput !== null)
+    function handleOnDatesChange(data: OnDatesChangeProps) {
+      handleOnFocusChange(data.focusedInput !== null)
       setDate(data.startDate)
     }
 
     function handleInputChange(date: Date) {
-      // @ts-ignore
-      if (ref && ref.current && ref.current.onDateSelect) {
-        // @ts-ignore
-        ref.current.onDateSelect(date)
+      if (datepickerRef && datepickerRef.current && datepickerRef.current.onDateSelect) {
+        datepickerRef.current.onDateSelect(date)
       }
     }
 
     return (
-      <StylesContextProvider
-        customStyles={customStyles}
-        overwriteDefaultStyles={overwriteDefaultStyles}
-      >
+      <StylesProvider styles={styles} overwriteDefaultStyles={overwriteDefaultStyles}>
         <Box position="relative" ref={datepickerWrapperRef}>
           <Input
             id={id}
@@ -165,18 +137,24 @@ export const DateSingleInput = forwardRef(
             placeholder={placeholder || phrases.datePlaceholder}
             dateFormat={displayFormat}
             showCalendarIcon={showCalendarIcon}
-            vertical={vertical}
             isActive={showDatepicker}
             onChange={handleInputChange}
             onClick={() => {
-              onFocusChange(true)
-              onClickProp()
+              handleOnFocusChange(true)
+              onClick()
             }}
+            disableAccessibility={false}
+            iconComponent={iconComponent}
           />
 
-          <Box position="absolute" top={placement === 'bottom' ? '65px' : 0}>
+          <Box
+            position="absolute"
+            top={placement === 'bottom' ? '45px' : undefined}
+            bottom={placement === 'top' ? '45px' : undefined}
+          >
             {showDatepicker && (
               <Datepicker
+                changeActiveMonthOnSelect={changeActiveMonthOnSelect}
                 dayLabelFormat={dayLabelFormat}
                 displayFormat={displayFormat}
                 endDate={date}
@@ -191,7 +169,7 @@ export const DateSingleInput = forwardRef(
                 monthLabelFormat={monthLabelFormat}
                 numberOfMonths={numberOfMonths}
                 onClose={handleDatepickerClose}
-                onDatesChange={onDatesChange}
+                onDatesChange={handleOnDatesChange}
                 onDayRender={onDayRender}
                 phrases={phrases}
                 ref={datepickerRef}
@@ -199,7 +177,6 @@ export const DateSingleInput = forwardRef(
                 showResetDates={showResetDate}
                 showSelectedDates={false}
                 startDate={date}
-                styles={customStyles}
                 unavailableDates={unavailableDates}
                 vertical={vertical}
                 weekdayLabelFormat={weekdayLabelFormat}
@@ -207,7 +184,7 @@ export const DateSingleInput = forwardRef(
             )}
           </Box>
         </Box>
-      </StylesContextProvider>
+      </StylesProvider>
     )
   },
 )

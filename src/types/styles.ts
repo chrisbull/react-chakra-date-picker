@@ -44,15 +44,19 @@ export interface DayStyles {
   daySelectedLastContainer?: BoxProps
 }
 
-interface InputComponentState {
-  container?: InputGroupProps
-  input?: InputProps
-  icon?: Omit<IconProps, 'css'>
-  inputAddon?: InputAddonProps
-}
 export interface InputComponentStyles {
-  default: InputComponentState
-  active: InputComponentState
+  default?: {
+    inputGroup?: InputGroupProps
+    input?: InputProps
+    icon?: Omit<IconProps, 'css'>
+    inputAddon?: InputAddonProps
+  }
+  active?: {
+    inputGroup?: InputGroupProps
+    input?: InputProps
+    icon?: Omit<IconProps, 'css'>
+    inputAddon?: InputAddonProps
+  }
 }
 
 export interface MonthStyles {
@@ -67,15 +71,19 @@ export interface ResetDatesButtonStyles {
 }
 
 export interface SelectDateStyles {
-  selectedDateContainer?: StackProps
-  selectedDateContainerActive?: StackProps
-  selectedDateText?: BoxProps
-  selectedDateTextActive?: BoxProps
-  selectedDateDateText?: BoxProps
-  selectedDateDateTextActive?: BoxProps
+  default?: {
+    container?: StackProps
+    text?: BoxProps
+    dateText?: BoxProps
+  }
+  active?: {
+    container?: StackProps
+    text?: BoxProps
+    dateText?: BoxProps
+  }
 }
 
 export interface DateRangeInputStyles {
-  selectDatesContainer: StackProps
-  selectDatesDivider: StackDividerProps
+  selectDatesContainer?: StackProps
+  selectDatesDivider?: StackDividerProps
 }

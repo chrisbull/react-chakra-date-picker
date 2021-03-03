@@ -1,35 +1,16 @@
 import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
-import { CalendarDay, FirstDayOfWeek, useMonth } from '@datepicker-react/hooks'
+import { CalendarDay, useMonth } from '@datepicker-react/hooks'
 import React from 'react'
+import { useDatepickerContext } from '../context/DatepickerContext'
 import { useStyles } from '../context/StylesContext'
 import { Day } from './Day'
 
 export interface MonthProps {
   year: number
   month: number
-  firstDayOfWeek: FirstDayOfWeek
-  dayLabelFormat(date: Date): string
-  weekdayLabelFormat(date: Date): string
-  monthLabelFormat(date: Date): string
 }
 
-export const Month = ({
-  year,
-  month,
-  firstDayOfWeek,
-  dayLabelFormat,
-  monthLabelFormat,
-  weekdayLabelFormat,
-}: MonthProps) => {
-  const { days, weekdayLabels, monthLabel } = useMonth({
-    dayLabelFormat,
-    monthLabelFormat,
-    weekdayLabelFormat,
-    year,
-    month,
-    firstDayOfWeek,
-  })
-
+export const Month = ({ year, month }: MonthProps) => {
   const styles = useStyles('month', {
     monthContainer: {},
     monthMonthLabel: {
@@ -47,6 +28,22 @@ export const Month = ({
     monthDayGrid: {
       rowGap: 1,
     },
+  })
+
+  const {
+    dayLabelFormat,
+    monthLabelFormat,
+    weekdayLabelFormat,
+    firstDayOfWeek,
+  } = useDatepickerContext()
+
+  const { days, weekdayLabels, monthLabel } = useMonth({
+    year,
+    month,
+    dayLabelFormat,
+    monthLabelFormat,
+    weekdayLabelFormat,
+    firstDayOfWeek,
   })
 
   return (

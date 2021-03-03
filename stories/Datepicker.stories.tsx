@@ -20,4 +20,7 @@ export default meta
 const Template: Story<DatepickerProps> = args => <Datepicker {...args} />
 
 export const Default = Template.bind({})
-Default.args = {}
+Default.args = {
+  onDayRender: undefined,
+  overwriteDefaultStyles: true,
+}

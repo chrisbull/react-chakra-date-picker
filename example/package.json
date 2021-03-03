@@ -8,8 +8,11 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "@hookform/resolvers": "^1.3.5",
     "react-app-polyfill": "^1.0.0",
-    "react-hook-form": "^6.15.4"
+    "react-hook-form": "^6.15.4",
+    "yup": "^0.32.9",
+    "zod": "^1.11.11"
   },
   "alias": {
     "react": "../node_modules/react",
@@ -25,6 +28,7 @@
   "devDependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
+    "@types/yup": "^0.29.11",
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
   }

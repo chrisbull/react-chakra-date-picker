@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "label": "npm: start",
+      "detail": "tsdx watch"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "path": "example/",
+      "problemMatcher": [],
+      "label": "npm: start - example",
+      "detail": "parcel index.html"
+    },
+    {
+      "type": "npm",
+      "script": "storybook",
+      "problemMatcher": [],
+      "label": "npm: storybook",
+      "detail": "start-storybook -p 6006"
+    }
+  ]
+}

@@ -18,4 +18,5 @@ const Template: Story<DateSingleInputProps> = args => <DateSingleInput {...args}
 export const Default = Template.bind({})
 Default.args = {
   onDayRender: undefined,
-}
+  showDatepicker: true,
+} as DateSingleInputProps

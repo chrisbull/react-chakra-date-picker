@@ -9,7 +9,7 @@ import {
 } from '@datepicker-react/hooks'
 import React, { Ref, useImperativeHandle, useRef } from 'react'
 import { DatepickerFormatProps, DatepickerProvider } from '../context/DatepickerContext'
-import { StylesProvider, StylesProviderProps, useStyles } from '../context/StylesContext'
+import { StylesProvider, StylesProviderProps, useStyleProps } from '../context/StylesContext'
 import { DatepickerPhrases, datepickerPhrases } from '../phrases'
 import {
   dayLabelFormatFn,
@@ -118,27 +118,30 @@ export const Datepicker = React.forwardRef(
 
     const _vertical = vertical || isMobile
 
-    const styles = useStyles('datepickerComponent', {
+    const styleProps = useStyleProps({
       datepickerContainer: {
         background: 'white',
-        borderRadius: 'sm',
+        borderRadius: 'md',
         position: 'relative',
         width: 'fit-content',
-        boxShadow: 'rgba(0, 0, 0, 0.05) 0px 2px 6px, rgba(0, 0, 0, 0.07) 0px 0px 0px 1px',
-        p: [3, 5],
+        shadow: 'md',
+        px: [3, 5],
+        py: [5, 7],
         zIndex: 1,
       },
       monthsWrapper: {
-        spacing: 8,
+        spacing: [0, 8],
       },
       buttonsWrapper: {
-        alignItems: 'center',
-        pt: 5,
+        spacing: [1, 3],
       },
       arrowIcon: {
-        marginLeft: 15,
-        marginRight: 15,
+        my: [5, 15],
         color: 'gray.500',
+      },
+      datepickerFooter: {
+        justifyContent: 'space-between',
+        pt: [1, 3],
       },
     })
 
@@ -178,7 +181,7 @@ export const Datepicker = React.forwardRef(
           startDate={startDate}
           weekdayLabelFormat={weekdayLabelFormat || weekdayLabelFormatFn}
         >
-          <Box {...styles.datepickerContainer}>
+          <Box {...styleProps.datepickerContainer}>
             {showClose && <CloseButton onClick={onClose} />}
 
             {showSelectedDates && (
@@ -186,7 +189,7 @@ export const Datepicker = React.forwardRef(
                 <HStack data-testid="SelectedDatesGrid">
                   <SelectedDate date={startDate} isFocused={focusedInput === START_DATE} />
                   <Flex justifyContent="center" alignItems="center">
-                    <ArrowForwardIcon {...styles.arrowIcon} />
+                    <ArrowForwardIcon {...styleProps.arrowIcon} />
                   </Flex>
                   <SelectedDate date={endDate} isFocused={focusedInput === END_DATE} />
                 </HStack>
@@ -199,7 +202,7 @@ export const Datepicker = React.forwardRef(
                 isInline={!_vertical}
                 ref={monthGridRef}
                 padding={1}
-                {...styles.monthsWrapper}
+                {...styleProps.monthsWrapper}
                 onMouseLeave={() => {
                   if (dp.hoveredDate) {
                     dp.onDateHover(null)
@@ -215,19 +218,8 @@ export const Datepicker = React.forwardRef(
                 ))}
               </Stack>
 
-              <Flex {...styles.buttonsWrapper}>
-                {showResetDates && (
-                  <Flex flex="1">
-                    <ResetDatesButton onResetDates={dp.onResetDates} text={phrases.resetDates} />
-                  </Flex>
-                )}
-                <HStack
-                  position={!_vertical ? 'absolute' : 'relative'}
-                  top={!_vertical ? 0 : undefined}
-                  left={!_vertical ? 0 : undefined}
-                  right={!_vertical ? 0 : undefined}
-                  justifyContent="space-between"
-                >
+              <Flex {...styleProps.datepickerFooter}>
+                <HStack {...styleProps.buttonsWrapper}>
                   <ActionButton
                     direction={_vertical ? 'up' : 'left'}
                     onClick={_goToPreviousMonths}
@@ -239,6 +231,9 @@ export const Datepicker = React.forwardRef(
                     aria-label="Next month"
                   />
                 </HStack>
+                {showResetDates && (
+                  <ResetDatesButton onResetDates={dp.onResetDates} text={phrases.resetDates} />
+                )}
               </Flex>
             </Box>
           </Box>

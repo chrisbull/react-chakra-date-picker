@@ -2,7 +2,7 @@ import { Box, Flex, SimpleGrid, Text } from '@chakra-ui/react'
 import { CalendarDay, useMonth } from '@datepicker-react/hooks'
 import React from 'react'
 import { useDatepickerContext } from '../context/DatepickerContext'
-import { useStyles } from '../context/StylesContext'
+import { useStyleProps } from '../context/StylesContext'
 import { Day } from './Day'
 
 export interface MonthProps {
@@ -11,7 +11,7 @@ export interface MonthProps {
 }
 
 export const Month = ({ year, month }: MonthProps) => {
-  const styles = useStyles('month', {
+  const styleProps = useStyleProps({
     monthContainer: {},
     monthMonthLabel: {
       justifyContent: 'center',
@@ -47,18 +47,18 @@ export const Month = ({ year, month }: MonthProps) => {
   })
 
   return (
-    <Box {...styles.monthContainer}>
-      <Flex {...styles.monthMonthLabel}>
+    <Box {...styleProps.monthContainer}>
+      <Flex {...styleProps.monthMonthLabel}>
         <Text>{monthLabel}</Text>
       </Flex>
       <SimpleGrid columns={7}>
         {weekdayLabels.map((weekdayLabel: string) => (
-          <Flex key={weekdayLabel} {...styles.monthWeekdayLabel}>
+          <Flex key={weekdayLabel} {...styleProps.monthWeekdayLabel}>
             <Text>{weekdayLabel}</Text>
           </Flex>
         ))}
       </SimpleGrid>
-      <SimpleGrid {...styles.monthDayGrid} columns={7}>
+      <SimpleGrid {...styleProps.monthDayGrid} columns={7}>
         {days.map((day: CalendarDay, index: number) =>
           typeof day === 'object' ? (
             <Day date={day.date} key={`${day.dayLabel}-${index}`} day={day.dayLabel} />

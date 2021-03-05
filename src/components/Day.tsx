@@ -1,136 +1,22 @@
-import { Box, Button, Flex } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { isEndDate, isStartDate, useDay } from '@datepicker-react/hooks'
-import React, { useRef } from 'react'
-import merge from 'ts-deepmerge'
-import { useDatepickerContext } from '../context/DatepickerContext'
-import { useStyles } from '../context/StylesContext'
-import { DayStyles } from '../types'
+import React, { useMemo, useRef } from 'react'
+import { OnDayRenderType, useDatepickerContext } from '../context/DatepickerContext'
+import { useStyleProps } from '../context/StylesContext'
+import { DayState } from '../types'
 
-const dayStyles: DayStyles = {
-  dayBase: {
-    height: ['32px', '48px'],
-    width: ['32px', '48px'],
-    pl: 0,
-    pr: 0,
-    minWidth: 'unset',
-    fontWeight: 'medium',
-    fontSize: ['sm', 'md'],
-    border: '2px solid',
-    borderRadius: '100%',
-    borderColor: 'transparent',
-    background: 'transparent',
-    _hover: {
-      borderColor: 'transparent',
-      background: 'transparent',
-    },
-  },
-  dayNormal: {
-    color: 'gray.900',
-    _hover: {
-      borderColor: 'black',
-    },
-  },
-  dayRangeHover: {
-    _hover: {
-      borderColor: 'black',
-    },
-  },
-  daySelected: {
-    _hover: {
-      borderColor: 'black',
-    },
-  },
-  daySelectedFirstOrLast: {
-    color: 'white',
-    background: 'black',
-    _hover: {
-      color: 'white',
-      background: 'black',
-    },
-  },
-  daySelectedFirst: {},
-  daySelectedLast: {},
-  dayBaseContainer: {
-    height: ['32px', '48px'],
-    width: ['32px', '48px'],
-    _hover: {
-      borderRightRadius: '100%',
-    },
-  },
-  dayNormalContainer: {},
-  dayRangeHoverContainer: {
-    background: 'gray.100',
-    _hover: {
-      borderRightRadius: '100%',
-    },
-  },
-  daySelectedContainer: {
-    background: 'gray.100',
-    _hover: {
-      borderRightRadius: '0%',
-    },
-  },
-  daySelectedFirstOrLastContainer: {
-    background: 'gray.100',
-  },
-  daySelectedFirstContainer: {
-    borderLeftRadius: '100%',
-  },
-  daySelectedLastContainer: {
-    borderRightRadius: '100%',
-    _hover: {
-      borderRightRadius: '100%',
-    },
-  },
-}
-
-function getColor(
-  {
-    isSelected,
-    isWithinHoverRange,
-    isFirst,
-    isLast,
-  }: {
-    isSelected: boolean
-    isWithinHoverRange: boolean
-    isFirst: boolean
-    isLast: boolean
-    isSelectedStartOrEnd: boolean
-    disabledDate: boolean
-  },
-  {
-    base,
-    normal,
-    rangeHover,
-    selected,
-    firstOrLast,
-    first,
-    last,
-  }: {
-    base: any
-    normal: any
-    rangeHover: any
-    selected: any
-    firstOrLast: any
-    first: any
-    last: any
-  },
+function getColor<T>(
+  { isSelected, isWithinHoverRange, isFirst, isLast }: OnDayRenderType,
+  { base, normal, rangeHover, selected, firstOrLast, first, last }: DayState<T>,
 ) {
-  let style = isSelected ? selected : isWithinHoverRange ? rangeHover : normal
-
-  if (isFirst || isLast) {
-    style = merge(style, firstOrLast)
-  }
-
-  if (isFirst) {
-    style = merge(style, first)
-  }
-
-  if (isLast) {
-    style = merge(style, last)
-  }
-
-  return merge(base, style)
+  let style = base
+  if (!isSelected && !isWithinHoverRange) style = { ...style, ...normal }
+  if (isSelected) style = { ...style, ...selected }
+  if (isWithinHoverRange) style = { ...style, ...rangeHover }
+  if (isFirst || isLast) style = { ...style, ...firstOrLast }
+  if (isFirst) style = { ...style, ...first }
+  if (isLast) style = { ...style, ...last }
+  return style
 }
 
 interface DayProps {
@@ -139,7 +25,7 @@ interface DayProps {
 }
 
 export function Day({ day, date }: DayProps) {
-  const dayRef = useRef<HTMLButtonElement>(null)
+  const dayRef = useRef<any>(null)
 
   const {
     focusedDate,
@@ -181,54 +67,158 @@ export function Day({ day, date }: DayProps) {
     disabledDate,
   } = dayProps
 
-  const styles = useStyles('day', dayStyles)
+  const styleProps = useStyleProps({
+    day: {
+      base: {
+        height: ['32px', '48px'],
+        width: ['32px', '48px'],
+        minWidth: 'unset',
+        fontWeight: 'medium',
+        fontSize: ['sm', 'md'],
+        border: '2px solid',
+        borderRadius: '100%',
+        borderColor: 'transparent',
+        background: 'transparent',
+        overflow: 'hidden',
+        _hover: {
+          borderColor: 'transparent',
+          background: 'transparent',
+        },
+      },
+      normal: {
+        color: 'gray.900',
+        _hover: {
+          borderColor: 'black',
+        },
+      },
+      rangeHover: {
+        _hover: {
+          borderColor: 'black',
+        },
+      },
+      selected: {
+        _hover: {
+          borderColor: 'black',
+        },
+      },
+      firstOrLast: {
+        color: 'white',
+        background: 'black',
+        _hover: {
+          color: 'white',
+          background: 'black',
+        },
+      },
+      first: {},
+      last: {},
+    },
+    dayContainer: {
+      base: {
+        height: ['32px', '48px'],
+        width: ['32px', '48px'],
+        _hover: {
+          borderRightRadius: '100%',
+        },
+      },
+      normal: {},
+      rangeHover: {
+        background: 'gray.100',
+        _hover: {
+          borderRightRadius: '100%',
+        },
+      },
+      selected: {
+        background: 'gray.100',
+        _hover: {
+          borderRightRadius: '0%',
+        },
+      },
+      firstOrLast: {
+        background: 'gray.100',
+      },
+      first: {
+        borderLeftRadius: '100%',
+      },
+      last: {
+        borderRightRadius: '100%',
+        _hover: {
+          borderRightRadius: '100%',
+        },
+      },
+    },
+  })
 
   const isFirst = isStartDate(date, startDate)
   const isLast = isEndDate(date, endDate)
 
-  const containerStyle = getColor(
-    {
+  const containerStyle = useMemo(
+    () =>
+      getColor(
+        {
+          isFirst,
+          isLast,
+          isSelected,
+          isWithinHoverRange,
+          isSelectedStartOrEnd,
+          disabledDate,
+        },
+        {
+          base: styleProps.dayContainer.base,
+          normal: styleProps.dayContainer.normal,
+          rangeHover: styleProps.dayContainer.rangeHover,
+          selected: styleProps.dayContainer.selected,
+          first: styleProps.dayContainer.first,
+          last: styleProps.dayContainer.last,
+          firstOrLast: styleProps.dayContainer.firstOrLast,
+        },
+      ),
+    [
       isFirst,
       isLast,
       isSelected,
       isWithinHoverRange,
       isSelectedStartOrEnd,
       disabledDate,
-    },
-    {
-      base: styles.dayBaseContainer,
-      normal: styles.dayNormalContainer,
-      rangeHover: styles.dayRangeHoverContainer,
-      selected: styles.daySelectedContainer,
-      first: styles.daySelectedFirstContainer,
-      last: styles.daySelectedLastContainer,
-      firstOrLast: styles.daySelectedFirstOrLastContainer,
-    },
+      styleProps,
+    ],
   )
 
-  const buttonStyle = getColor(
-    {
+  const buttonStyle = useMemo(
+    () =>
+      getColor(
+        {
+          isFirst,
+          isLast,
+          isSelected,
+          isWithinHoverRange,
+          isSelectedStartOrEnd,
+          disabledDate,
+        },
+        {
+          base: styleProps.day.base,
+          normal: styleProps.day.normal,
+          rangeHover: styleProps.day.rangeHover,
+          selected: styleProps.day.selected,
+          first: styleProps.day.first,
+          last: styleProps.day.last,
+          firstOrLast: styleProps.day.firstOrLast,
+        },
+      ),
+    [
       isFirst,
       isLast,
       isSelected,
       isWithinHoverRange,
       isSelectedStartOrEnd,
       disabledDate,
-    },
-    {
-      base: styles.dayBase,
-      normal: styles.dayNormal,
-      rangeHover: styles.dayRangeHover,
-      selected: styles.daySelected,
-      first: styles.daySelectedFirst,
-      last: styles.daySelectedLast,
-      firstOrLast: styles.daySelectedFirstOrLast,
-    },
+      styleProps,
+    ],
   )
 
   return (
     <Box {...containerStyle}>
       <Button
+        {...buttonStyle}
         variant="unstyled"
         onClick={onClick}
         onKeyDown={onKeyDown}
@@ -236,18 +226,20 @@ export function Day({ day, date }: DayProps) {
         tabIndex={tabIndex}
         ref={dayRef}
         disabled={disabledDate}
-        {...buttonStyle}
         data-testid="Day"
         aria-label={`Day-${date.toDateString()}`}
         type="button"
       >
-        {typeof onDayRender === 'function' ? (
-          onDayRender(date)
-        ) : (
-          <Flex justifyContent="center" alignItems="center" height="100%" width="100%">
-            {day}
-          </Flex>
-        )}
+        {typeof onDayRender === 'function'
+          ? onDayRender(date, {
+              isFirst,
+              isLast,
+              isSelected,
+              isWithinHoverRange,
+              isSelectedStartOrEnd,
+              disabledDate,
+            })
+          : day}
       </Button>
     </Box>
   )

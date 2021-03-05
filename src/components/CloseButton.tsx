@@ -3,21 +3,18 @@ import {
   CloseButtonProps as ChakraCloseButtonProps,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useStyles } from '../context/StylesContext'
-import { CloseButtonStyles } from '../types'
-
-const closeButtonStyles: CloseButtonStyles = {
-  closeButton: {
-    zIndex: 1,
-    position: 'absolute',
-    top: 0,
-    right: 0,
-  },
-}
+import { useStyleProps } from '../context/StylesContext'
 
 export interface CloseButtonProps extends ChakraCloseButtonProps {}
 
-export const CloseButton: React.FC<CloseButtonProps> = props => {
-  const styles = useStyles('closeButton', closeButtonStyles)
-  return <ChakraCloseButton {...styles.closeButton} {...props} />
+export const CloseButton = (props: CloseButtonProps) => {
+  const styleProps = useStyleProps({
+    closeButton: {
+      top: 1,
+      right: 1,
+      zIndex: 1,
+      position: 'absolute',
+    },
+  })
+  return <ChakraCloseButton {...styleProps.closeButton} {...props} />
 }

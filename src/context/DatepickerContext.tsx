@@ -17,13 +17,22 @@ export interface DatepickerFormatProps {
   monthLabelFormat: typeof monthLabelFormatFn
 }
 
+export type OnDayRenderType = {
+  isFirst: boolean
+  isLast: boolean
+  isSelected: boolean
+  isWithinHoverRange: boolean
+  isSelectedStartOrEnd: boolean
+  disabledDate: boolean
+}
+
 export interface DatepickerContextBaseProps {
   displayFormat: FormatFunction | string
   startDate: InputDate
   endDate: InputDate
   phrases: DatepickerPhrases
   focusedInput: FocusedInput
-  onDayRender?(date: Date): React.ReactNode
+  onDayRender?(date: Date, state: OnDayRenderType): React.ReactNode
 }
 
 export interface DatepickerContextProps

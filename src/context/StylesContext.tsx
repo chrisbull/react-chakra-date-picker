@@ -1,28 +1,7 @@
+import _pick from 'lodash.pick'
 import React, { createContext, FC, useContext } from 'react'
 import merge from 'ts-deepmerge'
-import {
-  ActionButtonStyles,
-  CloseButtonStyles,
-  DatepickerComponentStyles,
-  DateRangeInputStyles,
-  DayStyles,
-  InputComponentStyles,
-  MonthStyles,
-  ResetDatesButtonStyles,
-  SelectDateStyles,
-} from '../types'
-
-export interface DatepickerStyles {
-  actionButton: ActionButtonStyles
-  closeButton: CloseButtonStyles
-  datepickerComponent: DatepickerComponentStyles
-  day: DayStyles
-  inputComponent: InputComponentStyles
-  month: MonthStyles
-  resetDatesButton: ResetDatesButtonStyles
-  selectDate: SelectDateStyles
-  dateRangeInputStyles: DateRangeInputStyles
-}
+import { DatepickerStyles } from '../types'
 
 export interface StylesContextProps {
   overwriteDefaultStyles: boolean
@@ -36,14 +15,65 @@ export interface StylesProviderProps {
 
 export const emptyStylesObject: DatepickerStyles = {
   actionButton: {},
+  arrowIcon: {},
+  buttonsWrapper: {},
   closeButton: {},
-  datepickerComponent: {},
-  day: {},
-  inputComponent: {},
-  month: {},
+  datepickerContainer: {},
+  dateRangeInputContainer: {},
+  dateRangeInputDivider: {},
+  day: {
+    base: {},
+    normal: {},
+    rangeHover: {},
+    selected: {},
+    first: {},
+    firstOrLast: {},
+    last: {},
+  },
+  dayContainer: {
+    base: {},
+    normal: {},
+    rangeHover: {},
+    selected: {},
+    first: {},
+    firstOrLast: {},
+    last: {},
+  },
+  inputComponentIcon: {
+    active: {},
+    default: {},
+  },
+  inputComponentInput: {
+    active: {},
+    default: {},
+  },
+  inputComponentInputAddon: {
+    active: {},
+    default: {},
+  },
+  inputComponentInputGroup: {
+    active: {},
+    default: {},
+  },
+  monthContainer: {},
+  monthDayGrid: {},
+  monthMonthLabel: {},
+  monthsWrapper: {},
+  monthWeekdayLabel: {},
   resetDatesButton: {},
-  selectDate: {},
-  dateRangeInputStyles: {},
+  selectDateContainer: {
+    active: {},
+    default: {},
+  },
+  selectDateDateText: {
+    active: {},
+    default: {},
+  },
+  selectDateText: {
+    active: {},
+    default: {},
+  },
+  datepickerFooter: {},
 }
 
 export const StylesContext = createContext<StylesContextProps>({
@@ -63,12 +93,10 @@ export const StylesProvider: FC<StylesProviderProps> = ({
   </StylesContext.Provider>
 )
 
-export function useStyles<K extends keyof DatepickerStyles>(
-  key: K,
-  inlineStyles: DatepickerStyles[K],
-) {
-  const { styles: customStyles, overwriteDefaultStyles } = useContext(StylesContext)
-  const customStyle = customStyles[key]
-
-  return overwriteDefaultStyles ? customStyle : merge(inlineStyles, customStyle)
+export function useStyleProps<I extends DatepickerStyles>(inlineStyles: Partial<I>) {
+  const { styles, overwriteDefaultStyles } = useContext(StylesContext)
+  const keys = Object.keys(inlineStyles)
+  const filteredStyles = _pick(styles, keys) as I
+  const result = merge(filteredStyles, !overwriteDefaultStyles ? inlineStyles : ({} as I))
+  return result
 }

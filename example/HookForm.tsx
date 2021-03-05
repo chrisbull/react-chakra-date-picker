@@ -8,27 +8,28 @@ import {
   FormLabel,
   Stack,
 } from '@chakra-ui/react'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as React from 'react'
 import 'react-app-polyfill/ie11'
 import { useForm } from 'react-hook-form'
+import validator from 'validator'
 import * as yup from 'yup'
-import { DateRangeInput, DateSingleInput } from '../.'
+import * as z from 'zod'
+import { DateRangeInput, DateSingleInput } from '../src'
 
-const schema = yup.object().shape({
-  someDate: yup.date().required(),
+const dateValidation = z
+  .string()
+  .refine(date => validator.isDate(date, { format: 'MM/dd/yyyy', strictMode: true }), {
+    message: 'Date must be in the format of MM/dd/yyyy',
+  })
 
-  startDate: yup.date().default(function() {
-    return new Date()
-  }),
-
-  endDate: yup
-    .date()
-    .min(yup.ref('startDate'), 'End date should be greator')
-    .default(function() {
-      return new Date()
-    }),
+const schema = z.object({
+  someDate: dateValidation,
+  startDate: dateValidation,
+  endDate: dateValidation,
 })
+
+type Schema = z.infer<typeof schema>
 
 const theme = extendTheme({
   components: {
@@ -36,29 +37,17 @@ const theme = extendTheme({
       baseStyle: {},
     },
     InputGroup: {
-      defaultProps: {
-        height: '50px',
-      },
-      baseStyle: {
-        height: '50px',
-      },
-      variants: {
-        md: {
-          height: '50px',
-        },
-      },
+      defaultProps: { height: '50px' },
+      baseStyle: { height: '50px' },
+      variants: { md: { height: '50px' } },
     },
   },
 })
 
 export function HookForm() {
   const { handleSubmit, errors, register, formState, getValues } = useForm({
-    resolver: yupResolver(schema),
+    resolver: zodResolver(schema),
   })
-
-  React.useEffect(() => {
-    console.log('formState', getValues())
-  }, [formState, getValues])
 
   function onSubmit(values) {
     return new Promise(resolve => {
@@ -91,13 +80,13 @@ export function HookForm() {
             <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
           </FormControl> */}
 
-        <FormControl isInvalid={errors.someDate}>
+        <FormControl isInvalid={!!errors.someDate}>
           <FormLabel htmlFor="someDate">Some Date</FormLabel>
           <DateSingleInput ref={register} id="someDate" name="someDate" />
           <FormErrorMessage>{errors.someDate && errors.someDate.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={errors.startDate || errors.endDate}>
+        <FormControl isInvalid={!!errors.startDate || !!errors.endDate}>
           <FormLabel>Date Range</FormLabel>
           <DateRangeInput startRef={register} endRef={register} />
           <FormHelperText>Helper text goes here</FormHelperText>

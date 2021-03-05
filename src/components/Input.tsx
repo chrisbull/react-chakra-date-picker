@@ -8,12 +8,12 @@ import {
 } from '@chakra-ui/react'
 import { parseDate } from '@datepicker-react/hooks'
 import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'
-import merge from 'ts-deepmerge'
-import { useStyles } from '../context/StylesContext'
+import { useStyleProps } from '../context/StylesContext'
 import { InputDate } from '../types'
 import { defaultDisplayFormat } from '../utils/formatters'
 
 export interface InputProps {
+  allowEditableInputs?: boolean
   dateFormat?: string
   disableAccessibility?: boolean
   iconComponent?: typeof CalendarIcon
@@ -25,7 +25,6 @@ export interface InputProps {
   placeholder?: string
   showCalendarIcon?: boolean
   value?: string
-  allowEditableInputs?: boolean
 }
 
 export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
@@ -51,22 +50,27 @@ export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
   const [touched, setTouched] = useState(false)
   const [isInvalid, setIsInvalid] = useState(false)
 
-  const { default: defaultStyles = {}, active: activeStyles = {} } = useStyles('inputComponent', {
-    default: {
-      inputGroup: {},
-      input: {},
-      icon: {},
-      inputAddon: {},
+  const styleProps = useStyleProps({
+    inputComponentInputGroup: {
+      default: {},
+      active: {},
     },
-    active: {
-      inputGroup: {},
-      input: {},
-      icon: {},
-      inputAddon: {},
+    inputComponentInput: {
+      default: {},
+      active: {},
+    },
+    inputComponentIcon: {
+      default: {},
+      active: {},
+    },
+    inputComponentInputAddon: {
+      default: {},
+      active: {},
     },
   })
 
-  const styles = merge(defaultStyles, isActive ? activeStyles : {})
+  const getStateStyle = (style: { default: any; active: any }) =>
+    !isActive ? style.default : style.active
 
   // Note: value was updated outside of InputComponent
   useEffect(() => {
@@ -107,14 +111,14 @@ export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
 
   return (
     <FormControl isInvalid={touched && isInvalid}>
-      <InputGroup {...styles.inputGroup} htmlFor={id}>
+      <InputGroup {...getStateStyle(styleProps.inputComponentInputGroup)} htmlFor={id}>
         {showCalendarIcon && (
-          <InputLeftAddon {...styles.inputAddon}>
-            <Icon as={iconComponent} {...styles.icon} />
+          <InputLeftAddon {...getStateStyle(styleProps.inputComponentInputAddon)}>
+            <Icon as={iconComponent} {...getStateStyle(styleProps.inputComponentIcon)} />
           </InputLeftAddon>
         )}
         <ChakraInput
-          {...styles.input}
+          {...getStateStyle(styleProps.inputComponentInput)}
           readOnly={!allowEditableInputs}
           ref={inputRef}
           id={id}

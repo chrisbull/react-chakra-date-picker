@@ -2,6 +2,7 @@ import {
   BoxProps,
   ButtonProps,
   CloseButtonProps,
+  FlexProps,
   IconButtonProps,
   IconProps,
   InputAddonProps,
@@ -13,77 +14,93 @@ import {
 } from '@chakra-ui/react'
 
 export interface ActionButtonStyles {
-  actionButton?: Partial<IconButtonProps>
+  actionButton: Partial<IconButtonProps>
 }
 
 export interface CloseButtonStyles {
-  closeButton?: CloseButtonProps
+  closeButton: Partial<CloseButtonProps>
 }
 
 export interface DatepickerComponentStyles {
-  datepickerContainer?: BoxProps
-  monthsWrapper?: StackProps
-  buttonsWrapper?: BoxProps
-  arrowIcon?: Omit<IconProps, 'css'>
+  datepickerContainer: BoxProps
+  monthsWrapper: StackProps
+  buttonsWrapper: StackProps
+  arrowIcon: Omit<IconProps, 'css'>
+  datepickerFooter: FlexProps
+}
+
+export interface DayState<T extends any> {
+  base: T
+  normal: T
+  rangeHover: T
+  selected: T
+  firstOrLast: T
+  first: T
+  last: T
 }
 
 export interface DayStyles {
-  dayBase?: ButtonProps
-  dayNormal?: ButtonProps
-  dayRangeHover?: ButtonProps
-  daySelected?: ButtonProps
-  daySelectedFirstOrLast?: ButtonProps
-  daySelectedFirst?: ButtonProps
-  daySelectedLast?: ButtonProps
-  dayBaseContainer?: ButtonProps
-  dayNormalContainer?: BoxProps
-  dayRangeHoverContainer?: BoxProps
-  daySelectedContainer?: BoxProps
-  daySelectedFirstOrLastContainer?: BoxProps
-  daySelectedFirstContainer?: BoxProps
-  daySelectedLastContainer?: BoxProps
+  day: DayState<ButtonProps>
+  dayContainer: DayState<BoxProps>
 }
 
 export interface InputComponentStyles {
-  default?: {
-    inputGroup?: InputGroupProps
-    input?: InputProps
-    icon?: Omit<IconProps, 'css'>
-    inputAddon?: InputAddonProps
+  inputComponentInputGroup: {
+    default: InputGroupProps
+    active: InputGroupProps
   }
-  active?: {
-    inputGroup?: InputGroupProps
-    input?: InputProps
-    icon?: Omit<IconProps, 'css'>
-    inputAddon?: InputAddonProps
+  inputComponentInput: {
+    default: InputProps
+    active: InputProps
+  }
+  inputComponentIcon: {
+    default: Omit<IconProps, 'css'>
+    active: Omit<IconProps, 'css'>
+  }
+  inputComponentInputAddon: {
+    default: InputAddonProps
+    active: InputAddonProps
   }
 }
 
 export interface MonthStyles {
-  monthContainer?: BoxProps
-  monthMonthLabel?: BoxProps
-  monthWeekdayLabel?: BoxProps
-  monthDayGrid?: SimpleGridProps
+  monthContainer: BoxProps
+  monthMonthLabel: BoxProps
+  monthWeekdayLabel: BoxProps
+  monthDayGrid: SimpleGridProps
 }
 
 export interface ResetDatesButtonStyles {
-  resetDatesButton?: ButtonProps
+  resetDatesButton: ButtonProps
 }
 
 export interface SelectDateStyles {
-  default?: {
-    container?: StackProps
-    text?: BoxProps
-    dateText?: BoxProps
+  selectDateContainer: {
+    default: StackProps
+    active: StackProps
   }
-  active?: {
-    container?: StackProps
-    text?: BoxProps
-    dateText?: BoxProps
+  selectDateText: {
+    default: BoxProps
+    active: BoxProps
+  }
+  selectDateDateText: {
+    default: BoxProps
+    active: BoxProps
   }
 }
 
 export interface DateRangeInputStyles {
-  selectDatesContainer?: StackProps
-  selectDatesDivider?: StackDividerProps
+  dateRangeInputContainer: StackProps
+  dateRangeInputDivider: StackDividerProps
 }
+
+export interface DatepickerStyles
+  extends ActionButtonStyles,
+    CloseButtonStyles,
+    DatepickerComponentStyles,
+    DayStyles,
+    InputComponentStyles,
+    MonthStyles,
+    ResetDatesButtonStyles,
+    SelectDateStyles,
+    DateRangeInputStyles {}

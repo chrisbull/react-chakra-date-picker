@@ -8,7 +8,7 @@ import {
   START_DATE,
 } from '@datepicker-react/hooks'
 import React, { Ref, useEffect, useRef, useState } from 'react'
-import { StylesProvider, StylesProviderProps, useStyles } from '../context/StylesContext'
+import { StylesProvider, StylesProviderProps, useStyleProps } from '../context/StylesContext'
 import { dateRangeInputPhrases, DateRangeInputPhrases } from '../phrases'
 import { InputDate } from '../types'
 import { defaultDisplayFormat } from '../utils/formatters'
@@ -18,8 +18,8 @@ import { Input, InputProps } from './Input'
 export interface DateRangeInputProps
   extends Partial<StylesProviderProps>,
     Partial<DatepickerProps> {
-  startDateInputProps: Partial<InputProps>
-  endDateInputProps: Partial<InputProps>
+  startDateInputProps?: Partial<InputProps>
+  endDateInputProps?: Partial<InputProps>
   phrases?: DateRangeInputPhrases
   showDivider?: boolean
   placement?: 'top' | 'bottom'
@@ -98,9 +98,9 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
     setEndDate(endDateProp)
   }, [startDateProp, endDateProp])
 
-  const styles = useStyles('dateRangeInputStyles', {
-    selectDatesContainer: { spacing: 5 },
-    selectDatesDivider: {},
+  const styleProps = useStyleProps({
+    dateRangeInputContainer: { spacing: 5 },
+    dateRangeInputDivider: {},
   })
 
   useEffect(() => {
@@ -155,9 +155,9 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
       <Box position="relative" ref={datepickerWrapperRef}>
         <Stack
           isInline={!isMobile}
-          {...styles.selectDatesContainer}
+          {...styleProps.dateRangeInputContainer}
           data-testid="DateRangeInputGrid"
-          divider={showDivider ? <StackDivider {...styles.selectDatesDivider} /> : undefined}
+          divider={showDivider ? <StackDivider {...styleProps.dateRangeInputDivider} /> : undefined}
         >
           <Input
             iconComponent={startIcon}

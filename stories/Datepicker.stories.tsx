@@ -1,5 +1,4 @@
-import { Button } from '@chakra-ui/button'
-import { Container } from '@chakra-ui/react'
+import { Button, Container } from '@chakra-ui/react'
 import { FocusedInput, OnDatesChangeProps, START_DATE } from '@datepicker-react/hooks'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'

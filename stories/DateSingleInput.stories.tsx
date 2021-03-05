@@ -16,4 +16,6 @@ export default meta
 const Template: Story<DateSingleInputProps> = args => <DateSingleInput {...args} />
 
 export const Default = Template.bind({})
-Default.args = {}
+Default.args = {
+  onDayRender: undefined,
+}

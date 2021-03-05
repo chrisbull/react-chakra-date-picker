@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  extendTheme,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -13,7 +12,6 @@ import * as React from 'react'
 import 'react-app-polyfill/ie11'
 import { useForm } from 'react-hook-form'
 import validator from 'validator'
-import * as yup from 'yup'
 import * as z from 'zod'
 import { DateRangeInput, DateSingleInput } from '../src'
 
@@ -30,19 +28,6 @@ const schema = z.object({
 })
 
 type Schema = z.infer<typeof schema>
-
-const theme = extendTheme({
-  components: {
-    Container: {
-      baseStyle: {},
-    },
-    InputGroup: {
-      defaultProps: { height: '50px' },
-      baseStyle: { height: '50px' },
-      variants: { md: { height: '50px' } },
-    },
-  },
-})
 
 export function HookForm() {
   const { handleSubmit, errors, register, formState, getValues } = useForm({

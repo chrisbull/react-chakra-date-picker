@@ -3,10 +3,6 @@ import React from 'react'
 import { DateRangeInput, DateRangeInputProps } from '../src'
 import { withChakra } from './utils/withChakra'
 
-const startDate = new Date()
-const endDate = new Date()
-endDate.setDate(endDate.getDate() + 5)
-
 const meta: Meta = {
   title: 'DateRangeInput',
   component: DateRangeInput,

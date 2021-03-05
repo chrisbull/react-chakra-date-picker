@@ -1,20 +1,9 @@
-import 'react-app-polyfill/ie11'
-import {
-  ChakraProvider,
-  Container,
-  extendTheme,
-  Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftAddon,
-  Stack,
-} from '@chakra-ui/react'
+import { ChakraProvider, Container, extendTheme, Heading, Stack } from '@chakra-ui/react'
 import * as React from 'react'
 import { FC } from 'react'
+import 'react-app-polyfill/ie11'
 import * as ReactDOM from 'react-dom'
 import { HookForm } from './HookForm'
-import { CalendarIcon } from '@chakra-ui/icons'
 
 const theme = extendTheme({
   components: {
@@ -41,12 +30,6 @@ const App = () => {
     <ChakraProvider theme={theme}>
       <Container mt={10}>
         <Heading>React Chakra-UI Date Picker</Heading>
-        <InputGroup>
-          <InputLeftAddon>
-            <CalendarIcon />
-          </InputLeftAddon>
-          <Input />
-        </InputGroup>
         <HookForm />
       </Container>
     </ChakraProvider>

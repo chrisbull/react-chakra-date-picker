@@ -1,5 +1,5 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Box, Flex, HStack, Stack, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Flex, HStack, Stack, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
 import {
   END_DATE,
   MonthType,
@@ -120,7 +120,7 @@ export const Datepicker = React.forwardRef(
 
     const styleProps = useStyleProps({
       datepickerContainer: {
-        background: 'white',
+        background: useColorModeValue('white', 'gray.700'),
         borderRadius: 'md',
         position: 'relative',
         width: 'fit-content',

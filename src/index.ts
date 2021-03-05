@@ -1,6 +1,5 @@
 export * from './components'
 export * from './context/DatepickerContext'
 export * from './context/StylesContext'
-export * from './libs'
 export * from './phrases'
 export * from './types'

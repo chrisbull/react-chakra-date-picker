@@ -1,4 +1,4 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, useColorModeValue } from '@chakra-ui/react'
 import { isEndDate, isStartDate, useDay } from '@datepicker-react/hooks'
 import React, { useMemo, useRef } from 'react'
 import { OnDayRenderType, useDatepickerContext } from '../context/DatepickerContext'
@@ -76,6 +76,7 @@ export function Day({ day, date }: DayProps) {
         fontWeight: 'medium',
         fontSize: ['sm', 'md'],
         border: '2px solid',
+        textColor: useColorModeValue('gray.900', 'white'),
         borderRadius: '100%',
         borderColor: 'transparent',
         background: 'transparent',
@@ -86,27 +87,26 @@ export function Day({ day, date }: DayProps) {
         },
       },
       normal: {
-        color: 'gray.900',
         _hover: {
-          borderColor: 'black',
+          borderColor: useColorModeValue('black', 'white'),
         },
       },
       rangeHover: {
         _hover: {
-          borderColor: 'black',
+          borderColor: useColorModeValue('black', 'white'),
         },
       },
       selected: {
         _hover: {
-          borderColor: 'black',
+          borderColor: useColorModeValue('black', 'white'),
         },
       },
       firstOrLast: {
-        color: 'white',
-        background: 'black',
+        textColor: useColorModeValue('white', 'black'),
+        background: useColorModeValue('black', 'white'),
         _hover: {
-          color: 'white',
-          background: 'black',
+          textColor: useColorModeValue('white', 'black'),
+          background: useColorModeValue('black', 'white'),
         },
       },
       first: {},
@@ -122,19 +122,19 @@ export function Day({ day, date }: DayProps) {
       },
       normal: {},
       rangeHover: {
-        background: 'gray.100',
+        background: useColorModeValue('gray.100', 'gray.500'),
         _hover: {
           borderRightRadius: '100%',
         },
       },
       selected: {
-        background: 'gray.100',
+        background: useColorModeValue('gray.100', 'gray.500'),
         _hover: {
           borderRightRadius: '0%',
         },
       },
       firstOrLast: {
-        background: 'gray.100',
+        background: useColorModeValue('gray.100', 'gray.500'),
       },
       first: {
         borderLeftRadius: '100%',

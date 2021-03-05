@@ -10,13 +10,14 @@ const meta: Meta = {
     controls: { expanded: true },
   },
   decorators: [withChakra],
+  args: {
+    onDayRender: undefined,
+    showDatepicker: true,
+  },
 }
 export default meta
 
 const Template: Story<DateSingleInputProps> = args => <DateSingleInput {...args} />
 
 export const Default = Template.bind({})
-Default.args = {
-  onDayRender: undefined,
-  showDatepicker: true,
-} as DateSingleInputProps
+Default.args = {}

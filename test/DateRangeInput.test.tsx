@@ -1,6 +1,7 @@
 import React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Default as DateRangeInput } from '../stories/DateRangeInput.stories'
+import './utils/jsdom-fixes'
 
 describe('DateRangeInput', () => {
   it('renders without crashing', () => {

@@ -1,9 +1,9 @@
 import { Button } from '@chakra-ui/button'
 import { Container } from '@chakra-ui/react'
-import { OnDatesChangeProps, START_DATE } from '@datepicker-react/hooks'
+import { FocusedInput, OnDatesChangeProps, START_DATE } from '@datepicker-react/hooks'
 import { Meta, Story } from '@storybook/react'
 import React, { useRef, useState } from 'react'
-import { Datepicker, DatepickerElement, DatepickerProps, FocusedInput, InputDate } from '../src'
+import { Datepicker, DatepickerElement, DatepickerProps, InputDate } from '../src'
 import { withChakra } from './utils/withChakra'
 
 const meta: Meta = {
@@ -13,6 +13,9 @@ const meta: Meta = {
     controls: { expanded: true },
   },
   decorators: [withChakra],
+  args: {
+    onDayRender: undefined,
+  },
 }
 export default meta
 
@@ -59,6 +62,4 @@ const Template: Story<DatepickerProps> = args => {
 }
 
 export const Default = Template.bind({})
-Default.args = {
-  onDayRender: undefined,
-}
+Default.args = {}

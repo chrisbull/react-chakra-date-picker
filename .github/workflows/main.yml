@@ -2,31 +2,26 @@ name: CI
 on: [push]
 jobs:
   build:
-    name: Build, lint, and test on Node ${{ matrix.node }} and ${{ matrix.os }}
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node: ['10.x', '12.x', '14.x']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-
+    name: Build, lint, and test on Node
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Use Node ${{ matrix.node }}
-        uses: actions/setup-node@v1
+      - name: Install dependencies using yarn
+        uses: borales/actions-yarn@v2.3.0
         with:
-          node-version: ${{ matrix.node }}
-
-      - name: Install deps and build (with cache)
-        uses: Borales/actions-yarn@v2.3.0
+          cmd: install # will run `yarn install` command
 
       - name: Lint
-        run: yarn lint
+        uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: lint # will (maybe?) run `yarn lint` command
 
-      - name: Test
-        run: yarn test --ci --coverage --maxWorkers=2
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: build # will run `yarn build` command
 
-      - name: Build
-        run: yarn build
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: test --ci --coverage --maxWorkers=2 # will run `yarn test` command

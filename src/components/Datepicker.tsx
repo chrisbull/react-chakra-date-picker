@@ -1,5 +1,14 @@
 import { ArrowForwardIcon } from '@chakra-ui/icons'
-import { Box, Flex, HStack, Stack, useBreakpointValue, useColorModeValue } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  HStack,
+  Stack,
+  ThemeProvider,
+  useBreakpointValue,
+  useColorModeValue,
+  useTheme,
+} from '@chakra-ui/react'
 import {
   END_DATE,
   MonthType,
@@ -145,100 +154,104 @@ export const Datepicker = React.forwardRef(
       },
     })
 
+    const theme = useTheme()
+
     return (
-      <StylesProvider styles={customStyles} overwriteDefaultStyles={overwriteDefaultStyles}>
-        <DatepickerProvider
-          activeMonths={dp.activeMonths}
-          dayLabelFormat={dayLabelFormat || dayLabelFormatFn}
-          displayFormat={displayFormat}
-          endDate={endDate}
-          firstDayOfWeek={dp.firstDayOfWeek}
-          focusedDate={dp.focusedDate}
-          focusedInput={focusedInput}
-          goToDate={dp.goToDate}
-          goToNextMonths={_goToNextMonths}
-          goToNextMonthsByOneMonth={dp.goToNextMonthsByOneMonth}
-          goToNextYear={dp.goToNextYear}
-          goToPreviousMonths={_goToPreviousMonths}
-          goToPreviousMonthsByOneMonth={dp.goToPreviousMonthsByOneMonth}
-          goToPreviousYear={dp.goToPreviousYear}
-          hoveredDate={dp.hoveredDate}
-          isDateBlocked={dp.isDateBlocked}
-          isDateFocused={dp.isDateFocused}
-          isDateHovered={dp.isDateHovered}
-          isDateSelected={dp.isDateSelected}
-          isEndDate={dp.isEndDate}
-          isFirstOrLastSelectedDate={dp.isFirstOrLastSelectedDate}
-          isStartDate={dp.isStartDate}
-          monthLabelFormat={monthLabelFormat || monthLabelFormatFn}
-          numberOfMonths={dp.numberOfMonths}
-          onDateFocus={dp.onDateFocus}
-          onDateHover={dp.onDateHover}
-          onDateSelect={dp.onDateSelect}
-          onDayRender={onDayRender}
-          onResetDates={dp.onResetDates}
-          phrases={phrases}
-          startDate={startDate}
-          weekdayLabelFormat={weekdayLabelFormat || weekdayLabelFormatFn}
-        >
-          <Box {...styleProps.datepickerContainer}>
-            {showClose && <CloseButton onClick={onClose} />}
+      <ThemeProvider theme={theme}>
+        <StylesProvider styles={customStyles} overwriteDefaultStyles={overwriteDefaultStyles}>
+          <DatepickerProvider
+            activeMonths={dp.activeMonths}
+            dayLabelFormat={dayLabelFormat || dayLabelFormatFn}
+            displayFormat={displayFormat}
+            endDate={endDate}
+            firstDayOfWeek={dp.firstDayOfWeek}
+            focusedDate={dp.focusedDate}
+            focusedInput={focusedInput}
+            goToDate={dp.goToDate}
+            goToNextMonths={_goToNextMonths}
+            goToNextMonthsByOneMonth={dp.goToNextMonthsByOneMonth}
+            goToNextYear={dp.goToNextYear}
+            goToPreviousMonths={_goToPreviousMonths}
+            goToPreviousMonthsByOneMonth={dp.goToPreviousMonthsByOneMonth}
+            goToPreviousYear={dp.goToPreviousYear}
+            hoveredDate={dp.hoveredDate}
+            isDateBlocked={dp.isDateBlocked}
+            isDateFocused={dp.isDateFocused}
+            isDateHovered={dp.isDateHovered}
+            isDateSelected={dp.isDateSelected}
+            isEndDate={dp.isEndDate}
+            isFirstOrLastSelectedDate={dp.isFirstOrLastSelectedDate}
+            isStartDate={dp.isStartDate}
+            monthLabelFormat={monthLabelFormat || monthLabelFormatFn}
+            numberOfMonths={dp.numberOfMonths}
+            onDateFocus={dp.onDateFocus}
+            onDateHover={dp.onDateHover}
+            onDateSelect={dp.onDateSelect}
+            onDayRender={onDayRender}
+            onResetDates={dp.onResetDates}
+            phrases={phrases}
+            startDate={startDate}
+            weekdayLabelFormat={weekdayLabelFormat || weekdayLabelFormatFn}
+          >
+            <Box {...styleProps.datepickerContainer}>
+              {showClose && <CloseButton onClick={onClose} />}
 
-            {showSelectedDates && (
-              <Box mb={6}>
-                <HStack data-testid="SelectedDatesGrid">
-                  <SelectedDate date={startDate} isFocused={focusedInput === START_DATE} />
-                  <Flex justifyContent="center" alignItems="center">
-                    <ArrowForwardIcon {...styleProps.arrowIcon} />
-                  </Flex>
-                  <SelectedDate date={endDate} isFocused={focusedInput === END_DATE} />
-                </HStack>
+              {showSelectedDates && (
+                <Box mb={6}>
+                  <HStack data-testid="SelectedDatesGrid">
+                    <SelectedDate date={startDate} isFocused={focusedInput === START_DATE} />
+                    <Flex justifyContent="center" alignItems="center">
+                      <ArrowForwardIcon {...styleProps.arrowIcon} />
+                    </Flex>
+                    <SelectedDate date={endDate} isFocused={focusedInput === END_DATE} />
+                  </HStack>
+                </Box>
+              )}
+              <Box position="relative">
+                <Stack
+                  overflow={_vertical ? 'auto' : undefined}
+                  data-testid="MonthGrid"
+                  isInline={!_vertical}
+                  ref={monthGridRef}
+                  padding={1}
+                  {...styleProps.monthsWrapper}
+                  onMouseLeave={() => {
+                    if (dp.hoveredDate) {
+                      dp.onDateHover(null)
+                    }
+                  }}
+                >
+                  {dp.activeMonths.map((month: MonthType) => (
+                    <Month
+                      key={`month-${month.year}-${month.month}`}
+                      year={month.year}
+                      month={month.month}
+                    />
+                  ))}
+                </Stack>
+
+                <Flex {...styleProps.datepickerFooter}>
+                  <HStack {...styleProps.buttonsWrapper}>
+                    <ActionButton
+                      direction={_vertical ? 'up' : 'left'}
+                      onClick={_goToPreviousMonths}
+                      aria-label="Previous month"
+                    />
+                    <ActionButton
+                      direction={_vertical ? 'down' : 'right'}
+                      onClick={_goToNextMonths}
+                      aria-label="Next month"
+                    />
+                  </HStack>
+                  {showResetDates && (
+                    <ResetDatesButton onResetDates={dp.onResetDates} text={phrases.resetDates} />
+                  )}
+                </Flex>
               </Box>
-            )}
-            <Box position="relative">
-              <Stack
-                overflow={_vertical ? 'auto' : undefined}
-                data-testid="MonthGrid"
-                isInline={!_vertical}
-                ref={monthGridRef}
-                padding={1}
-                {...styleProps.monthsWrapper}
-                onMouseLeave={() => {
-                  if (dp.hoveredDate) {
-                    dp.onDateHover(null)
-                  }
-                }}
-              >
-                {dp.activeMonths.map((month: MonthType) => (
-                  <Month
-                    key={`month-${month.year}-${month.month}`}
-                    year={month.year}
-                    month={month.month}
-                  />
-                ))}
-              </Stack>
-
-              <Flex {...styleProps.datepickerFooter}>
-                <HStack {...styleProps.buttonsWrapper}>
-                  <ActionButton
-                    direction={_vertical ? 'up' : 'left'}
-                    onClick={_goToPreviousMonths}
-                    aria-label="Previous month"
-                  />
-                  <ActionButton
-                    direction={_vertical ? 'down' : 'right'}
-                    onClick={_goToNextMonths}
-                    aria-label="Next month"
-                  />
-                </HStack>
-                {showResetDates && (
-                  <ResetDatesButton onResetDates={dp.onResetDates} text={phrases.resetDates} />
-                )}
-              </Flex>
             </Box>
-          </Box>
-        </DatepickerProvider>
-      </StylesProvider>
+          </DatepickerProvider>
+        </StylesProvider>
+      </ThemeProvider>
     )
   },
 )

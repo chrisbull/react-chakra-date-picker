@@ -1,5 +1,12 @@
 import { CalendarIcon } from '@chakra-ui/icons'
-import { Box, Stack, StackDivider, useBreakpointValue } from '@chakra-ui/react'
+import {
+  Box,
+  Stack,
+  StackDivider,
+  ThemeProvider,
+  useBreakpointValue,
+  useTheme,
+} from '@chakra-ui/react'
 import {
   END_DATE,
   FocusedInput,
@@ -150,84 +157,90 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const _vertical = vertical || isMobile
 
+  const theme = useTheme()
+
   return (
-    <StylesProvider styles={customStyles} overwriteDefaultStyles={overwriteDefaultStyles}>
-      <Box position="relative" ref={datepickerWrapperRef}>
-        <Stack
-          isInline={!isMobile}
-          {...styleProps.dateRangeInputContainer}
-          data-testid="DateRangeInputGrid"
-          divider={showDivider ? <StackDivider {...styleProps.dateRangeInputDivider} /> : undefined}
-        >
-          <Input
-            iconComponent={startIcon}
-            id={startId || 'startDate'}
-            name={startName || 'startDate'}
-            placeholder={startPlaceholder || phrases.startDatePlaceholder}
-            ref={startRef}
-            showCalendarIcon={startShowCalendarIcon}
-            aria-label={phrases.startDateAriaLabel}
-            dateFormat={displayFormat}
-            isActive={focusedInput === START_DATE}
-            onChange={handleInputChange}
-            onClick={() => handleOnFocusChange(START_DATE)}
-            value={getInputValue(startDate, displayFormat, '')}
-            allowEditableInputs={allowEditableInputs}
-          />
-          <Input
-            id={endId || 'endDate'}
-            name={endName || 'endDate'}
-            ref={endRef}
-            iconComponent={endIcon}
-            placeholder={endPlaceholder || phrases.endDatePlaceholder}
-            showCalendarIcon={endShowCalendarIcon}
-            aria-label={phrases.endDateAriaLabel}
-            dateFormat={displayFormat}
-            disableAccessibility={focusedInput === START_DATE}
-            isActive={focusedInput === END_DATE}
-            onChange={handleInputChange}
-            onClick={() => handleOnFocusChange(!startDate ? START_DATE : END_DATE)}
-            value={getInputValue(endDate, displayFormat, '')}
-            allowEditableInputs={allowEditableInputs}
-          />
-        </Stack>
-        <Box
-          position="absolute"
-          top={placement === 'top' ? undefined : _vertical ? '100px' : '45px'}
-          bottom={placement === 'bottom' ? undefined : _vertical ? '100px' : '45px'}
-        >
-          {focusedInput !== null && (
-            <Datepicker
-              ref={datepickerRef}
-              startDate={startDate}
-              endDate={endDate}
-              focusedInput={focusedInput}
-              onClose={handleOnClose}
-              onDatesChange={handleOnDatesChange}
-              changeActiveMonthOnSelect={changeActiveMonthOnSelect}
-              dayLabelFormat={dayLabelFormat}
-              exactMinBookingDays={exactMinBookingDays}
-              firstDayOfWeek={firstDayOfWeek}
-              initialVisibleMonth={initialVisibleMonth}
-              isDateBlocked={isDateBlocked}
-              maxBookingDate={maxBookingDate}
-              minBookingDate={minBookingDate}
-              minBookingDays={minBookingDays}
-              monthLabelFormat={monthLabelFormat}
-              numberOfMonths={_vertical ? 1 : numberOfMonths}
-              onDayRender={onDayRender}
-              phrases={phrases}
-              unavailableDates={unavailableDates}
-              displayFormat={displayFormat}
-              showClose={showClose}
-              showResetDates={showResetDates}
-              showSelectedDates={showSelectedDates}
-              vertical={_vertical}
-              weekdayLabelFormat={weekdayLabelFormat}
+    <ThemeProvider theme={theme}>
+      <StylesProvider styles={customStyles} overwriteDefaultStyles={overwriteDefaultStyles}>
+        <Box position="relative" ref={datepickerWrapperRef}>
+          <Stack
+            isInline={!isMobile}
+            {...styleProps.dateRangeInputContainer}
+            data-testid="DateRangeInputGrid"
+            divider={
+              showDivider ? <StackDivider {...styleProps.dateRangeInputDivider} /> : undefined
+            }
+          >
+            <Input
+              iconComponent={startIcon}
+              id={startId || 'startDate'}
+              name={startName || 'startDate'}
+              placeholder={startPlaceholder || phrases.startDatePlaceholder}
+              ref={startRef}
+              showCalendarIcon={startShowCalendarIcon}
+              aria-label={phrases.startDateAriaLabel}
+              dateFormat={displayFormat}
+              isActive={focusedInput === START_DATE}
+              onChange={handleInputChange}
+              onClick={() => handleOnFocusChange(START_DATE)}
+              value={getInputValue(startDate, displayFormat, '')}
+              allowEditableInputs={allowEditableInputs}
             />
-          )}
+            <Input
+              id={endId || 'endDate'}
+              name={endName || 'endDate'}
+              ref={endRef}
+              iconComponent={endIcon}
+              placeholder={endPlaceholder || phrases.endDatePlaceholder}
+              showCalendarIcon={endShowCalendarIcon}
+              aria-label={phrases.endDateAriaLabel}
+              dateFormat={displayFormat}
+              disableAccessibility={focusedInput === START_DATE}
+              isActive={focusedInput === END_DATE}
+              onChange={handleInputChange}
+              onClick={() => handleOnFocusChange(!startDate ? START_DATE : END_DATE)}
+              value={getInputValue(endDate, displayFormat, '')}
+              allowEditableInputs={allowEditableInputs}
+            />
+          </Stack>
+          <Box
+            position="absolute"
+            top={placement === 'top' ? undefined : _vertical ? '100px' : '45px'}
+            bottom={placement === 'bottom' ? undefined : _vertical ? '100px' : '45px'}
+          >
+            {focusedInput !== null && (
+              <Datepicker
+                ref={datepickerRef}
+                startDate={startDate}
+                endDate={endDate}
+                focusedInput={focusedInput}
+                onClose={handleOnClose}
+                onDatesChange={handleOnDatesChange}
+                changeActiveMonthOnSelect={changeActiveMonthOnSelect}
+                dayLabelFormat={dayLabelFormat}
+                exactMinBookingDays={exactMinBookingDays}
+                firstDayOfWeek={firstDayOfWeek}
+                initialVisibleMonth={initialVisibleMonth}
+                isDateBlocked={isDateBlocked}
+                maxBookingDate={maxBookingDate}
+                minBookingDate={minBookingDate}
+                minBookingDays={minBookingDays}
+                monthLabelFormat={monthLabelFormat}
+                numberOfMonths={_vertical ? 1 : numberOfMonths}
+                onDayRender={onDayRender}
+                phrases={phrases}
+                unavailableDates={unavailableDates}
+                displayFormat={displayFormat}
+                showClose={showClose}
+                showResetDates={showResetDates}
+                showSelectedDates={showSelectedDates}
+                vertical={_vertical}
+                weekdayLabelFormat={weekdayLabelFormat}
+              />
+            )}
+          </Box>
         </Box>
-      </Box>
-    </StylesProvider>
+      </StylesProvider>
+    </ThemeProvider>
   )
 }

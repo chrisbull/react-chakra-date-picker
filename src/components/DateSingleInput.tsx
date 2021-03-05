@@ -69,11 +69,11 @@ export const DateSingleInput = forwardRef(
 
     useEffect(() => {
       onChange(date)
-    }, [date])
+    }, [date, onChange])
 
     useEffect(() => {
       onFocusChange(showDatepicker)
-    }, [showDatepicker])
+    }, [onFocusChange, showDatepicker])
 
     useEffect(() => {
       if (typeof window !== 'undefined') {

@@ -1,5 +1,13 @@
 import 'react-app-polyfill/ie11'
-import { ChakraProvider, Container, extendTheme, Heading, Stack } from '@chakra-ui/react'
+import {
+  ChakraProvider,
+  Container,
+  extendTheme,
+  Heading,
+  Input,
+  InputGroup,
+  Stack,
+} from '@chakra-ui/react'
 import * as React from 'react'
 import { FC } from 'react'
 import * as ReactDOM from 'react-dom'
@@ -12,15 +20,25 @@ const theme = extendTheme({
     },
     InputGroup: {
       defaultProps: {
-        height: '50px',
+        h: 100,
       },
       baseStyle: {
-        height: '50px',
+        height: 100,
       },
-      variants: {
-        md: {
-          height: '50px',
+      sizes: {
+        xl: {
+          h: '56px',
+          fontSize: 'lg',
+          px: '32px',
         },
+      },
+    },
+    Input: {
+      defaultProps: {
+        h: 100,
+      },
+      baseStyle: {
+        h: 100,
       },
     },
   },
@@ -42,33 +60,10 @@ const App = () => {
     <ChakraProvider theme={theme}>
       <Container mt={10}>
         <Heading>React Chakra-UI Date Picker</Heading>
+        <InputGroup>
+          <Input />
+        </InputGroup>
         <HookForm />
-
-        <Stack>
-          {/* <Card>
-            <Subhead>Single Date Picker</Subhead>
-            <DateSingleInput />
-          </Card> */}
-          {/* <Card>
-            <Subhead>Date Range Picker</Subhead>
-            <DateRangeInputDemo
-              startDateInputId="horizontal-startDate-range"
-              endDateInputId="horizontal-endDate"
-            />
-          </Card> */}
-          {/* <Card>
-            <Subhead>Single Date Picker</Subhead>
-            <DateSingleInputDemo inputId="vertical-startDate-single" vertical />
-          </Card> */}
-          {/* <Card>
-            <Subhead>Date Range Picker</Subhead>
-            <DateRangeInputDemo
-              startDateInputId="vertical-startDate-range"
-              endDateInputId="vertical-endDate"
-              vertical
-            />
-          </Card> */}
-        </Stack>
       </Container>
     </ChakraProvider>
   )

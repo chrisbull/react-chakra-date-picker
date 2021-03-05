@@ -148,6 +148,8 @@ export function Day({ day, date }: DayProps) {
     },
   })
 
+  const {} = styleProps
+
   const isFirst = isStartDate(date, startDate)
   const isLast = isEndDate(date, endDate)
 

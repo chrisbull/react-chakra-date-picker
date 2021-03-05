@@ -93,10 +93,15 @@ export const StylesProvider: FC<StylesProviderProps> = ({
   </StylesContext.Provider>
 )
 
-export function useStyleProps<I extends DatepickerStyles>(inlineStyles: Partial<I>) {
+export function useStyleProps<InitialStyles extends Partial<DatepickerStyles>>(
+  inlineStyles: InitialStyles,
+) {
   const { styles, overwriteDefaultStyles } = useContext(StylesContext)
   const keys = Object.keys(inlineStyles)
-  const filteredStyles = _pick(styles, keys) as I
-  const result = merge(filteredStyles, !overwriteDefaultStyles ? inlineStyles : ({} as I))
+  const filteredStyles = _pick(styles, keys) as InitialStyles
+  const result = merge(
+    filteredStyles,
+    !overwriteDefaultStyles ? inlineStyles : ({} as InitialStyles),
+  )
   return result
 }

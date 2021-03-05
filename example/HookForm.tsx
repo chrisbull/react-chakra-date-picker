@@ -13,12 +13,13 @@ import 'react-app-polyfill/ie11'
 import { useForm } from 'react-hook-form'
 import validator from 'validator'
 import * as z from 'zod'
-import { DateRangeInput, DateSingleInput } from '../src'
+import { DateRangeInput, DateSingleInput } from '../.'
 
 const dateValidation = z
   .string()
+  .length(String('MM/dd/yyyy').length, 'Date is required')
   .refine(date => validator.isDate(date, { format: 'MM/dd/yyyy', strictMode: true }), {
-    message: 'Date must be in the format of MM/dd/yyyy',
+    message: 'Date is required and must be in the form of mm/dd/yyyy',
   })
 
 const schema = z.object({
@@ -30,11 +31,11 @@ const schema = z.object({
 type Schema = z.infer<typeof schema>
 
 export function HookForm() {
-  const { handleSubmit, errors, register, formState, getValues } = useForm({
+  const { handleSubmit, errors, register, formState } = useForm({
     resolver: zodResolver(schema),
   })
 
-  function onSubmit(values) {
+  function onSubmit(values: Schema) {
     return new Promise(resolve => {
       setTimeout(() => {
         console.log(JSON.stringify(values, null, 2))
@@ -45,43 +46,23 @@ export function HookForm() {
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={5} mt={5}>
-        {/* 
-        <FormControl isInvalid={errors.name}>
-            <FormLabel htmlFor="name">First name</FormLabel>
-            <Input name="name" placeholder="name" ref={register({ validate: validateName })} />
-            <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={errors.expirationDate}>
-            <FormLabel htmlFor="expirationDate">Expiration Date</FormLabel>
-            <DateSingleInput
-              id="expirationDate"
-              name="expirationDate"
-              ref={register({ validate: validateExpirationDate })}
-              showCalendarIcon={false}
-              placeholder="Expiration Date"
-            />
-            <FormHelperText>Helper text goes here</FormHelperText>
-            <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
-          </FormControl> */}
-
-        <FormControl isInvalid={!!errors.someDate}>
+      <Stack spacing={5} my={5}>
+        <FormControl isInvalid={!!errors?.someDate}>
           <FormLabel htmlFor="someDate">Some Date</FormLabel>
           <DateSingleInput ref={register} id="someDate" name="someDate" />
-          <FormErrorMessage>{errors.someDate && errors.someDate.message}</FormErrorMessage>
+          <FormErrorMessage>{errors?.someDate?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl isInvalid={!!errors.startDate || !!errors.endDate}>
+        <FormControl isInvalid={!!errors?.startDate || !!errors?.endDate}>
           <FormLabel>Date Range</FormLabel>
           <DateRangeInput startRef={register} endRef={register} />
           <FormHelperText>Helper text goes here</FormHelperText>
           <FormErrorMessage>
-            {(errors.startDate && errors.startDate.message) ||
-              (errors.endDate && errors.endDate.message)}
+            {errors?.startDate?.message || errors?.endDate?.message}
           </FormErrorMessage>
         </FormControl>
       </Stack>
-      <Button mt={4} colorScheme="teal" isLoading={formState.isSubmitting} type="submit">
+      <Button type="submit" colorScheme="teal" isLoading={formState.isSubmitting}>
         Submit
       </Button>
     </Box>

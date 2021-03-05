@@ -20,6 +20,7 @@ import React, { Ref, useImperativeHandle, useRef } from 'react'
 import { DatepickerFormatProps, DatepickerProvider } from '../context/DatepickerContext'
 import { StylesProvider, StylesProviderProps, useStyleProps } from '../context/StylesContext'
 import { DatepickerPhrases, datepickerPhrases } from '../phrases'
+import { DatepickerComponentStyles } from '../types'
 import {
   dayLabelFormatFn,
   defaultDisplayFormat,
@@ -127,7 +128,7 @@ export const Datepicker = React.forwardRef(
 
     const _vertical = vertical || isMobile
 
-    const styleProps = useStyleProps({
+    const styleProps = useStyleProps<DatepickerComponentStyles>({
       datepickerContainer: {
         background: useColorModeValue('white', 'gray.700'),
         borderRadius: 'md',

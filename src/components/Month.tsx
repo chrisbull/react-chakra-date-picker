@@ -3,6 +3,7 @@ import { CalendarDay, useMonth } from '@datepicker-react/hooks'
 import React from 'react'
 import { useDatepickerContext } from '../context/DatepickerContext'
 import { useStyleProps } from '../context/StylesContext'
+import { MonthStyles } from '../types'
 import { Day } from './Day'
 
 export interface MonthProps {
@@ -11,7 +12,7 @@ export interface MonthProps {
 }
 
 export const Month = ({ year, month }: MonthProps) => {
-  const styleProps = useStyleProps({
+  const styleProps = useStyleProps<MonthStyles>({
     monthContainer: {},
     monthMonthLabel: {
       justifyContent: 'center',

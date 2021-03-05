@@ -3,7 +3,7 @@ import { isEndDate, isStartDate, useDay } from '@datepicker-react/hooks'
 import React, { useMemo, useRef } from 'react'
 import { OnDayRenderType, useDatepickerContext } from '../context/DatepickerContext'
 import { useStyleProps } from '../context/StylesContext'
-import { DayState } from '../types'
+import { DayState, DayStyles } from '../types'
 
 function getColor<T>(
   { isSelected, isWithinHoverRange, isFirst, isLast }: OnDayRenderType,
@@ -67,7 +67,7 @@ export function Day({ day, date }: DayProps) {
     disabledDate,
   } = dayProps
 
-  const styleProps = useStyleProps({
+  const styleProps = useStyleProps<DayStyles>({
     day: {
       base: {
         height: ['32px', '48px'],

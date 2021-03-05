@@ -1,7 +1,7 @@
-import _pick from 'lodash.pick'
 import React, { createContext, FC, useContext } from 'react'
-import merge from 'ts-deepmerge'
 import { DatepickerStyles } from '../types'
+import merge from '../utils/deepmerge'
+import pick from '../utils/pick'
 
 export interface StylesContextProps {
   overwriteDefaultStyles: boolean
@@ -98,7 +98,7 @@ export function useStyleProps<
 >(inlineStyles: InitialStyles) {
   const { styles, overwriteDefaultStyles } = useContext(StylesContext)
   const keys = Object.keys(inlineStyles)
-  const filteredStyles = _pick(styles, keys) as InitialStyles
+  const filteredStyles = pick(styles, keys)
   const result = merge(
     filteredStyles,
     !overwriteDefaultStyles ? inlineStyles : ({} as InitialStyles),

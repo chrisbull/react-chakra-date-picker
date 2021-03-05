@@ -3,6 +3,7 @@ import { Button } from '@chakra-ui/react'
 import React from 'react'
 import { useDatepickerContext } from '../context/DatepickerContext'
 import { useStyleProps } from '../context/StylesContext'
+import { ResetDatesButtonStyles } from '../types'
 
 interface ResetDatesProps {
   onResetDates(): void
@@ -12,7 +13,7 @@ interface ResetDatesProps {
 export function ResetDatesButton({ onResetDates, text }: ResetDatesProps) {
   const { phrases } = useDatepickerContext()
 
-  const styleProps = useStyleProps({
+  const styleProps = useStyleProps<ResetDatesButtonStyles>({
     resetDatesButton: {},
   })
 

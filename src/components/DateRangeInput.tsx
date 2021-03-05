@@ -17,7 +17,7 @@ import {
 import React, { Ref, useEffect, useRef, useState } from 'react'
 import { StylesProvider, StylesProviderProps, useStyleProps } from '../context/StylesContext'
 import { dateRangeInputPhrases, DateRangeInputPhrases } from '../phrases'
-import { InputDate } from '../types'
+import { DateRangeInputStyles, InputDate } from '../types'
 import { defaultDisplayFormat } from '../utils/formatters'
 import { Datepicker, DatepickerElement, DatepickerProps } from './Datepicker'
 import { Input, InputProps } from './Input'
@@ -105,7 +105,7 @@ export const DateRangeInput: React.FC<DateRangeInputProps> = props => {
     setEndDate(endDateProp)
   }, [startDateProp, endDateProp])
 
-  const styleProps = useStyleProps({
+  const styleProps = useStyleProps<DateRangeInputStyles>({
     dateRangeInputContainer: { spacing: 5 },
     dateRangeInputDivider: {},
   })

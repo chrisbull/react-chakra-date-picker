@@ -2,9 +2,9 @@ import { CalendarIcon } from '@chakra-ui/icons'
 import {
   Icon,
   Input as ChakraInput,
-  InputProps as ChakraInputProps,
   InputGroup,
   InputLeftAddon,
+  InputProps as ChakraInputProps,
 } from '@chakra-ui/react'
 import { parseDate } from '@datepicker-react/hooks'
 import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'

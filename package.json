@@ -22,9 +22,6 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
-  "peerDependencies": {
-    "react": ">=16"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "yarn test && yarn lint"
@@ -57,27 +54,23 @@
     ]
   },
   "dependencies": {
-    "lodash.pick": "^4.4.0",
-    "ts-deepmerge": "^1.0.6"
+    "@datepicker-react/hooks": "^2.8.0"
   },
-  "resolutions": {
-    "framer-motion": "^3.7.0",
+  "peerDependencies": {
     "@chakra-ui/icons": "^1.0.5",
     "@chakra-ui/react": "^1.3.3",
-    "@emotion/react": "^11.1.5",
-    "@emotion/styled": "^11.1.5",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-icons": "^4.2.0"
+    "@emotion/react": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
+    "framer-motion": ">=3.0.0",
+    "react": ">=16.8.6"
   },
   "devDependencies": {
+    "react-icons": "^4.2.0",
     "@babel/core": "^7.13.8",
     "@chakra-ui/icons": "^1.0.5",
     "@chakra-ui/react": "^1.3.3",
-    "@chakra-ui/theme-tools": "^1.0.4",
-    "@datepicker-react/hooks": "^2.8.0",
-    "@emotion/react": "^11.1.5",
-    "@emotion/styled": "^11.1.5",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
     "@size-limit/preset-small-lib": "^4.9.2",
     "@storybook/addon-essentials": "^6.1.20",
     "@storybook/addon-info": "^5.3.21",
@@ -88,23 +81,13 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/react-hooks": "^5.0.3",
-    "@types/babel__core": "^7.1.12",
-    "@types/jest": "^26.0.20",
-    "@types/lodash.pick": "^4.4.6",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "@types/react-is": "^17.0.0",
-    "@types/storybook__addon-info": "^5.2.3",
-    "@types/testing-library__jest-dom": "^5.9.5",
     "babel-jest": "^26.6.3",
     "babel-loader": "^8.2.2",
-    "framer-motion": "^3.7.0",
+    "framer-motion": "^3.1.1",
     "husky": "^5.1.2",
     "jest-date-mock": "^1.0.8",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-icons": "^4.2.0",
-    "react-is": "^17.0.1",
     "size-limit": "^4.9.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.1.0",

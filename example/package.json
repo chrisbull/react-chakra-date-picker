@@ -23,8 +23,7 @@
     "@chakra-ui/react": "../node_modules/@chakra-ui/react",
     "@datepicker-react/hooks": "../node_modules/@datepicker-react/hooks",
     "@emotion/react": "../node_modules/@emotion/react",
-    "@emotion/styled": "../node_modules/@emotion/styled",
-    "ts-deepmerge": "../node_modules/ts-deepmerge"
+    "@emotion/styled": "../node_modules/@emotion/styled"
   },
   "devDependencies": {
     "@types/react": "^17.0.2",

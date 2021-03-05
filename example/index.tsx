@@ -4,43 +4,24 @@ import {
   Container,
   extendTheme,
   Heading,
+  Icon,
   Input,
   InputGroup,
+  InputLeftAddon,
   Stack,
 } from '@chakra-ui/react'
 import * as React from 'react'
 import { FC } from 'react'
 import * as ReactDOM from 'react-dom'
 import { HookForm } from './HookForm'
+import { CalendarIcon } from '@chakra-ui/icons'
 
 const theme = extendTheme({
   components: {
-    Container: {
-      baseStyle: {},
-    },
-    InputGroup: {
-      defaultProps: {
-        h: 100,
-      },
-      baseStyle: {
-        height: 100,
-      },
-      sizes: {
-        xl: {
-          h: '56px',
-          fontSize: 'lg',
-          px: '32px',
-        },
-      },
-    },
-    Input: {
-      defaultProps: {
-        h: 100,
-      },
-      baseStyle: {
-        h: 100,
-      },
-    },
+    Container: {},
+    Button: {},
+    InputGroup: {},
+    Input: {},
   },
 })
 
@@ -61,6 +42,9 @@ const App = () => {
       <Container mt={10}>
         <Heading>React Chakra-UI Date Picker</Heading>
         <InputGroup>
+          <InputLeftAddon>
+            <CalendarIcon />
+          </InputLeftAddon>
           <Input />
         </InputGroup>
         <HookForm />

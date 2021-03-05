@@ -1,10 +1,10 @@
 import { Stack, Text } from '@chakra-ui/react'
 import { getInputValue } from '@datepicker-react/hooks'
 import React from 'react'
-import merge from 'ts-deepmerge'
 import { useDatepickerContext } from '../context/DatepickerContext'
 import { useStyleProps } from '../context/StylesContext'
-import { InputDate } from '../types'
+import { InputDate, SelectDateStyles } from '../types'
+import { getStateStyle } from '../utils/getStateStyle'
 
 export interface SelectedDateProps {
   isFocused: boolean
@@ -14,9 +14,9 @@ export interface SelectedDateProps {
 export const SelectedDate = ({ isFocused, date }: SelectedDateProps) => {
   const { phrases, displayFormat } = useDatepickerContext()
 
-  const styleProps = useStyleProps({
+  const styleProps = useStyleProps<SelectDateStyles>({
     selectDateContainer: {
-      default: {
+      base: {
         width: '100%',
         borderBottom: '2px solid',
         borderColor: 'gray.300',
@@ -27,14 +27,14 @@ export const SelectedDate = ({ isFocused, date }: SelectedDateProps) => {
       },
     },
     selectDateText: {
-      default: {
+      base: {
         fontSize: 'xs',
         color: 'gray.500',
       },
       active: {},
     },
     selectDateDateText: {
-      default: {
+      base: {
         fontWeight: 'bold',
         fontSize: ['sm', 'md', 'lg'],
       },
@@ -42,13 +42,12 @@ export const SelectedDate = ({ isFocused, date }: SelectedDateProps) => {
     },
   })
 
-  const getStateStyle = (style: { default: any; active: any }) =>
-    !isFocused ? style.default : merge(style.default, style.active)
-
   return (
-    <Stack {...getStateStyle(styleProps.selectDateContainer)}>
-      <Text {...getStateStyle(styleProps.selectDateText)}>{phrases.datepickerStartDateLabel}</Text>
-      <Text {...getStateStyle(styleProps.selectDateDateText)}>
+    <Stack {...getStateStyle(styleProps.selectDateContainer, isFocused)}>
+      <Text {...getStateStyle(styleProps.selectDateText, isFocused)}>
+        {phrases.datepickerStartDateLabel}
+      </Text>
+      <Text {...getStateStyle(styleProps.selectDateDateText, isFocused)}>
         {getInputValue(date, displayFormat, phrases.datepickerStartDatePlaceholder)}
       </Text>
     </Stack>

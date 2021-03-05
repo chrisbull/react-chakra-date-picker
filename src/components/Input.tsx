@@ -1,16 +1,17 @@
 import { CalendarIcon } from '@chakra-ui/icons'
 import {
-  FormControl,
   Icon,
   Input as ChakraInput,
+  InputProps as ChakraInputProps,
   InputGroup,
   InputLeftAddon,
 } from '@chakra-ui/react'
 import { parseDate } from '@datepicker-react/hooks'
 import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'
 import { useStyleProps } from '../context/StylesContext'
-import { InputDate } from '../types'
+import { InputComponentStyles, InputDate } from '../types'
 import { defaultDisplayFormat } from '../utils/formatters'
+import { getStateStyle } from '../utils/getStateStyle'
 
 export interface InputProps {
   allowEditableInputs?: boolean
@@ -27,7 +28,9 @@ export interface InputProps {
   value?: string
 }
 
-export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
+interface BaseProps extends Omit<ChakraInputProps, 'onChange' | 'onClick' | 'value'>, InputProps {}
+
+export const Input = forwardRef((props: BaseProps, inputRef: Ref<any>) => {
   const {
     dateFormat = defaultDisplayFormat,
     disableAccessibility,
@@ -41,48 +44,40 @@ export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
     showCalendarIcon = true,
     value,
     allowEditableInputs = false,
+
+    ...inputProps
   } = props
 
   const ref = useRef<any>(null)
 
   const [searchString, setSearchString] = useState(value)
 
-  const [touched, setTouched] = useState(false)
-  const [isInvalid, setIsInvalid] = useState(false)
-
-  const styleProps = useStyleProps({
+  const styleProps = useStyleProps<InputComponentStyles>({
     inputComponentInputGroup: {
-      default: {},
+      base: {},
       active: {},
     },
     inputComponentInput: {
-      default: {},
+      base: {},
       active: {},
     },
     inputComponentIcon: {
-      default: {},
+      base: {},
       active: {},
     },
     inputComponentInputAddon: {
-      default: {},
+      base: {},
       active: {},
     },
   })
 
-  const getStateStyle = (style: { default: any; active: any }) =>
-    !isActive ? style.default : style.active
-
   // Note: value was updated outside of InputComponent
   useEffect(() => {
-    // reset states
-    setIsInvalid(false)
     setSearchString(value)
   }, [value])
 
   function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
     const dateValue = e.target.value
-
-    setTouched(true)
     setSearchString(dateValue)
 
     if (typeof ref.current === 'number') {
@@ -95,10 +90,8 @@ export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
       const isValidDate = !isNaN(parsedDate.getDate())
 
       if (isValidDate) {
-        setIsInvalid(false)
         onChange(parsedDate)
       } else {
-        setIsInvalid(true)
         onChange(null)
       }
     }, 1000)
@@ -106,32 +99,30 @@ export const Input = forwardRef((props: InputProps, inputRef: Ref<any>) => {
 
   function handleOnFocus(_e: React.FocusEvent<HTMLInputElement>) {
     onClick()
-    setTouched(true)
   }
 
   return (
-    <FormControl isInvalid={touched && isInvalid}>
-      <InputGroup {...getStateStyle(styleProps.inputComponentInputGroup)} htmlFor={id}>
-        {showCalendarIcon && (
-          <InputLeftAddon {...getStateStyle(styleProps.inputComponentInputAddon)}>
-            <Icon as={iconComponent} {...getStateStyle(styleProps.inputComponentIcon)} />
-          </InputLeftAddon>
-        )}
-        <ChakraInput
-          {...getStateStyle(styleProps.inputComponentInput)}
-          readOnly={!allowEditableInputs}
-          ref={inputRef}
-          id={id}
-          name={name}
-          value={searchString}
-          placeholder={placeholder}
-          tabIndex={disableAccessibility ? -1 : 0}
-          autoComplete="off"
-          data-testid="DatepickerInput"
-          onFocus={handleOnFocus}
-          onChange={handleOnChange}
-        />
-      </InputGroup>
-    </FormControl>
+    <InputGroup {...getStateStyle(styleProps.inputComponentInputGroup, isActive)} htmlFor={id}>
+      {showCalendarIcon && (
+        <InputLeftAddon {...getStateStyle(styleProps.inputComponentInputAddon, isActive)}>
+          <Icon as={iconComponent} {...getStateStyle(styleProps.inputComponentIcon, isActive)} />
+        </InputLeftAddon>
+      )}
+      <ChakraInput
+        {...inputProps}
+        {...getStateStyle(styleProps.inputComponentInput, isActive)}
+        ref={inputRef}
+        id={id}
+        name={name}
+        isReadOnly={!allowEditableInputs}
+        value={searchString}
+        placeholder={placeholder}
+        tabIndex={disableAccessibility ? -1 : 0}
+        autoComplete="off"
+        data-testid="DatepickerInput"
+        onFocus={handleOnFocus}
+        onChange={handleOnChange}
+      />
+    </InputGroup>
   )
 })

@@ -13,6 +13,8 @@ import {
   StackProps,
 } from '@chakra-ui/react'
 
+export type StateProp<T extends any> = { base: T; active?: T }
+
 export interface ActionButtonStyles {
   actionButton: Partial<IconButtonProps>
 }
@@ -45,22 +47,10 @@ export interface DayStyles {
 }
 
 export interface InputComponentStyles {
-  inputComponentInputGroup: {
-    default: InputGroupProps
-    active: InputGroupProps
-  }
-  inputComponentInput: {
-    default: InputProps
-    active: InputProps
-  }
-  inputComponentIcon: {
-    default: Omit<IconProps, 'css'>
-    active: Omit<IconProps, 'css'>
-  }
-  inputComponentInputAddon: {
-    default: InputAddonProps
-    active: InputAddonProps
-  }
+  inputComponentInputGroup: StateProp<InputGroupProps>
+  inputComponentInput: StateProp<InputProps>
+  inputComponentIcon: StateProp<Omit<IconProps, 'css'>>
+  inputComponentInputAddon: StateProp<InputAddonProps>
 }
 
 export interface MonthStyles {
@@ -75,18 +65,9 @@ export interface ResetDatesButtonStyles {
 }
 
 export interface SelectDateStyles {
-  selectDateContainer: {
-    default: StackProps
-    active: StackProps
-  }
-  selectDateText: {
-    default: BoxProps
-    active: BoxProps
-  }
-  selectDateDateText: {
-    default: BoxProps
-    active: BoxProps
-  }
+  selectDateContainer: StateProp<StackProps>
+  selectDateText: StateProp<BoxProps>
+  selectDateDateText: StateProp<BoxProps>
 }
 
 export interface DateRangeInputStyles {

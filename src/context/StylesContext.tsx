@@ -41,19 +41,19 @@ export const emptyStylesObject: DatepickerStyles = {
   },
   inputComponentIcon: {
     active: {},
-    default: {},
+    base: {},
   },
   inputComponentInput: {
     active: {},
-    default: {},
+    base: {},
   },
   inputComponentInputAddon: {
     active: {},
-    default: {},
+    base: {},
   },
   inputComponentInputGroup: {
     active: {},
-    default: {},
+    base: {},
   },
   monthContainer: {},
   monthDayGrid: {},
@@ -63,15 +63,15 @@ export const emptyStylesObject: DatepickerStyles = {
   resetDatesButton: {},
   selectDateContainer: {
     active: {},
-    default: {},
+    base: {},
   },
   selectDateDateText: {
     active: {},
-    default: {},
+    base: {},
   },
   selectDateText: {
     active: {},
-    default: {},
+    base: {},
   },
   datepickerFooter: {},
 }
@@ -93,9 +93,9 @@ export const StylesProvider: FC<StylesProviderProps> = ({
   </StylesContext.Provider>
 )
 
-export function useStyleProps<InitialStyles extends Partial<DatepickerStyles>>(
-  inlineStyles: InitialStyles,
-) {
+export function useStyleProps<
+  InitialStyles extends Partial<DatepickerStyles> = Partial<DatepickerStyles>
+>(inlineStyles: InitialStyles) {
   const { styles, overwriteDefaultStyles } = useContext(StylesContext)
   const keys = Object.keys(inlineStyles)
   const filteredStyles = _pick(styles, keys) as InitialStyles

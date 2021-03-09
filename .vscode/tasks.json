@@ -21,7 +21,7 @@
       "script": "storybook",
       "problemMatcher": [],
       "label": "npm: storybook",
-      "detail": "start-storybook -p 6006"
+      "detail": "start-storybook -p 6007"
     }
   ]
 }

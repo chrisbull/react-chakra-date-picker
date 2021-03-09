@@ -1,12 +1,12 @@
-import { Box, ThemeProvider, useTheme } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { getInputValue, OnDatesChangeProps, START_DATE } from '@datepicker-react/hooks'
 import React, { forwardRef, Ref, useEffect, useRef, useState } from 'react'
-import { StylesProvider } from '../context/StylesContext'
-import { DateSingleInputPhrases, dateSingleInputPhrases } from '../phrases'
-import { InputDate } from '../types'
-import { defaultDisplayFormat } from '../utils/formatters'
+import { Input, InputProps } from './components'
+import { StylesProvider } from './context/StylesContext'
 import { Datepicker, DatepickerElement, DatepickerProps } from './Datepicker'
-import { Input, InputProps } from './Input'
+import { DateSingleInputPhrases, dateSingleInputPhrases } from './phrases'
+import { InputDate } from './types'
+import { defaultDisplayFormat } from './utils/formatters'
 
 export interface OnDateChangeProps {
   date: InputDate
@@ -116,71 +116,67 @@ export const DateSingleInput = forwardRef(
       }
     }
 
-    const theme = useTheme()
-
     return (
-      <ThemeProvider theme={theme}>
-        <StylesProvider styles={styles} overwriteDefaultStyles={overwriteDefaultStyles}>
-          <Box position="relative" ref={datepickerWrapperRef}>
-            <Input
-              ref={ref}
-              id={id}
-              name={name}
-              aria-label={phrases.dateAriaLabel}
-              value={getInputValue(date, displayFormat, '')}
-              placeholder={placeholder || phrases.datePlaceholder}
-              dateFormat={displayFormat}
-              showCalendarIcon={showCalendarIcon}
-              isActive={showDatepicker}
-              onChange={handleInputChange}
-              onClick={() => {
-                handleOnFocusChange(true)
-                onClick()
-              }}
-              disableAccessibility={false}
-              iconComponent={iconComponent}
-              allowEditableInputs={allowEditableInputs}
-            />
+      <StylesProvider styles={styles} overwriteDefaultStyles={overwriteDefaultStyles}>
+        <Box position="relative" ref={datepickerWrapperRef}>
+          <Input
+            ref={ref}
+            id={id}
+            name={name}
+            aria-label={phrases.dateAriaLabel}
+            value={getInputValue(date, displayFormat, '')}
+            placeholder={placeholder || phrases.datePlaceholder}
+            dateFormat={displayFormat}
+            showCalendarIcon={showCalendarIcon}
+            isActive={showDatepicker}
+            onChange={handleInputChange}
+            onClick={() => {
+              handleOnFocusChange(true)
+              onClick()
+            }}
+            disableAccessibility={false}
+            iconComponent={iconComponent}
+            allowEditableInputs={allowEditableInputs}
+          />
 
-            <Box
-              position="absolute"
-              top={placement === 'bottom' ? '45px' : undefined}
-              bottom={placement === 'top' ? '45px' : undefined}
-            >
-              {showDatepicker && (
-                <Datepicker
-                  changeActiveMonthOnSelect={changeActiveMonthOnSelect}
-                  dayLabelFormat={dayLabelFormat}
-                  displayFormat={displayFormat}
-                  endDate={date}
-                  exactMinBookingDays
-                  firstDayOfWeek={firstDayOfWeek}
-                  focusedInput={showDatepicker ? START_DATE : null}
-                  initialVisibleMonth={initialVisibleMonth}
-                  isDateBlocked={isDateBlocked}
-                  maxBookingDate={maxBookingDate}
-                  minBookingDate={minBookingDate}
-                  minBookingDays={1}
-                  monthLabelFormat={monthLabelFormat}
-                  numberOfMonths={numberOfMonths}
-                  onClose={handleDatepickerClose}
-                  onDatesChange={handleOnDatesChange}
-                  onDayRender={onDayRender}
-                  phrases={phrases}
-                  ref={datepickerRef}
-                  showClose={showClose}
-                  showResetDates={showResetDate}
-                  showSelectedDates={false}
-                  startDate={date}
-                  unavailableDates={unavailableDates}
-                  vertical={vertical}
-                  weekdayLabelFormat={weekdayLabelFormat}
-                />
-              )}
-            </Box>
+          <Box
+            position="absolute"
+            top={placement === 'bottom' ? '45px' : undefined}
+            bottom={placement === 'top' ? '45px' : undefined}
+          >
+            {showDatepicker && (
+              <Datepicker
+                changeActiveMonthOnSelect={changeActiveMonthOnSelect}
+                dayLabelFormat={dayLabelFormat}
+                displayFormat={displayFormat}
+                endDate={date}
+                exactMinBookingDays
+                firstDayOfWeek={firstDayOfWeek}
+                focusedInput={showDatepicker ? START_DATE : null}
+                initialVisibleMonth={initialVisibleMonth}
+                isDateBlocked={isDateBlocked}
+                maxBookingDate={maxBookingDate}
+                minBookingDate={minBookingDate}
+                minBookingDays={1}
+                monthLabelFormat={monthLabelFormat}
+                numberOfMonths={numberOfMonths}
+                onClose={handleDatepickerClose}
+                onDatesChange={handleOnDatesChange}
+                onDayRender={onDayRender}
+                phrases={phrases}
+                ref={datepickerRef}
+                showClose={showClose}
+                showResetDates={showResetDate}
+                showSelectedDates={false}
+                startDate={date}
+                unavailableDates={unavailableDates}
+                vertical={vertical}
+                weekdayLabelFormat={weekdayLabelFormat}
+              />
+            )}
           </Box>
-        </StylesProvider>
-      </ThemeProvider>
+        </Box>
+      </StylesProvider>
     )
   },
 )

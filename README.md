@@ -8,7 +8,7 @@ Based on [@react-datepicker/styled](https://github.com/tresko/react-datepicker/t
 
 ---
 
-## Why use react-chakra-date-picker
+## Why use react-chakra-ui-datepicker
 
 Easily customize components using the built in Chakra UI theme, or pass a theme variable into the component and apply styling to individual components and states.
 

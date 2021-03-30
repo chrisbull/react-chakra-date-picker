@@ -33,16 +33,16 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "name": "react-chakra-date-picker",
+  "name": "react-chakra-ui-datepicker",
   "author": "Chris Bull",
-  "module": "dist/react-chakra-date-picker.esm.js",
+  "module": "dist/react-chakra-ui-datepicker.esm.js",
   "size-limit": [
     {
-      "path": "dist/react-chakra-date-picker.cjs.production.min.js",
+      "path": "dist/react-chakra-ui-datepicker.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/react-chakra-date-picker.esm.js",
+      "path": "dist/react-chakra-ui-datepicker.esm.js",
       "limit": "10 KB"
     }
   ],
